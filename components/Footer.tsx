@@ -121,10 +121,22 @@ export default function Footer() {
       <div className="border-t border-[#14141f] py-6 px-4 text-center text-[10px] text-zinc-600">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>© 2026 ZENJI STREETWEAR CORP. ALL RIGHTS RESERVED.</div>
-          <div className="flex space-x-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             <span className="hover:text-zinc-400 cursor-pointer">PRIVACY POLICY</span>
             <span className="hover:text-zinc-400 cursor-pointer">TERMS OF RELEASE</span>
             <span className="hover:text-zinc-400 cursor-pointer">SECURITY DISCLOSURE</span>
+            <button
+              onClick={() => {
+                try {
+                  sessionStorage.removeItem("zenji_bootloader_seen");
+                  window.dispatchEvent(new CustomEvent("zenji:reboot"));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                } catch {}
+              }}
+              className="hover:text-[#00f0ff] text-zinc-500 cursor-pointer transition-colors"
+            >
+              ⚡ REBOOT BOOTLOADER
+            </button>
           </div>
         </div>
       </div>

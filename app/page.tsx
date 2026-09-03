@@ -14,6 +14,7 @@ import LookbookModal from "@/components/LookbookModal";
 import LoadoutBuilder from "@/components/LoadoutBuilder";
 import DropGateModal from "@/components/DropGateModal";
 import ResupplyRadarModal from "@/components/ResupplyRadarModal";
+import AnimeBootloader from "@/components/AnimeBootloader";
 import AudioDeck from "@/components/AudioDeck";
 import Footer from "@/components/Footer";
 import { useCartStore } from "@/store/useCartStore";
@@ -80,6 +81,9 @@ function StorefrontContent() {
         globalFlashCam ? "bg-[#050508] text-zinc-100" : "bg-[#08080b] text-white"
       }`}
     >
+      {/* Global Anime Bootloader Sequence */}
+      <AnimeBootloader />
+
       {/* Sticky Header with Cart Count, Search, & Navigation */}
       <Navbar
         activeCategory={activeCategory}
