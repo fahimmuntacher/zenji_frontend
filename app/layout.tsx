@@ -33,6 +33,8 @@ export const metadata: Metadata = {
   authors: [{ name: "ZENJI Studios Tokyo" }],
 };
 
+import GlobalRainWrapper from "@/components/GlobalRainWrapper";
+
 export default function RootLayout({
   children,
 }: {
@@ -44,6 +46,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
     >
       <body className="min-h-screen bg-[#08080b] text-zinc-100 flex flex-col font-sans">
+        <GlobalRainWrapper />
         {children}
       </body>
     </html>

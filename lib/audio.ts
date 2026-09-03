@@ -109,3 +109,63 @@ export function playKatanaSlash() {
     noise.stop(now + 0.25);
   } catch {}
 }
+
+/**
+ * Procedural gentle Shibuya rain audio layer
+ */
+let rainNode: { ctx: AudioContext; source: AudioBufferSourceNode; gain: GainNode } | null = null;
+
+export function toggleRainAudio(enable: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    if (!enable && rainNode) {
+      rainNode.gain.gain.linearRampToValueAtTime(0.0001, rainNode.ctx.currentTime + 0.4);
+      setTimeout(() => {
+        try {
+          rainNode?.source.stop();
+        } catch {}
+        rainNode = null;
+      }, 400);
+      return;
+    }
+
+    if (enable && !rainNode) {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const bufferSize = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = buffer.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.035;
+        b6 = white * 0.115926;
+      }
+
+      const whiteNoise = ctx.createBufferSource();
+      whiteNoise.buffer = buffer;
+      whiteNoise.loop = true;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 1100;
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.03, ctx.currentTime);
+
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      whiteNoise.start();
+      rainNode = { ctx, source: whiteNoise, gain };
+    }
+  } catch {}
+}

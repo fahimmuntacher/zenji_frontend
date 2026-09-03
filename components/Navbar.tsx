@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { ShoppingBag, Search, X, Menu, ShieldCheck, Camera, Layers, KeyRound, Zap } from "lucide-react";
+import { ShoppingBag, Search, X, Menu, ShieldCheck, Camera, Layers, KeyRound, Zap, CloudRain } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { useCurrencyStore, CURRENCY_CONFIG, CurrencyCode } from "@/store/useCurrencyStore";
+import { useRainStore } from "@/store/useRainStore";
 import { SITE_CONFIG } from "@/config/site";
 import { playUiClick } from "@/lib/audio";
 
@@ -46,6 +47,7 @@ export default function Navbar({
 
   const { toggleCartDrawer, totalItems } = useCartStore();
   const { currency, setCurrency } = useCurrencyStore();
+  const { isRainActive, toggleRain } = useRainStore();
 
   useEffect(() => {
     setMounted(true);
@@ -138,6 +140,23 @@ export default function Navbar({
                 ))}
               </select>
             </div>
+
+            {/* Tokyo Rain Atmospheric Toggle */}
+            <button
+              onClick={() => {
+                playUiClick();
+                toggleRain();
+              }}
+              className={`flex items-center space-x-1 px-2 py-0.5 rounded border text-[10px] font-mono whitespace-nowrap transition-all ${
+                isRainActive
+                  ? "bg-[#00f0ff]/15 border-[#00f0ff]/50 text-[#00f0ff] font-bold shadow-sm shadow-[#00f0ff]/20"
+                  : "bg-[#13131c] border-[#252538] text-zinc-400 hover:text-white"
+              }`}
+              title="Toggle Shibuya Midnight Digital Rain Atmosphere"
+            >
+              <CloudRain className="w-3 h-3" />
+              <span>{isRainActive ? "RAIN: ON" : "RAIN: OFF"}</span>
+            </button>
 
             {isVipUnlocked ? (
               <span className="text-emerald-400 font-bold flex items-center">
