@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 import { SITE_CONFIG } from "@/config/site";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { playUiClick, playSuccessChime } from "@/lib/audio";
-import { X, ShieldCheck, CheckCircle2, CreditCard, Sparkles, Package, ArrowLeft, Loader2 } from "lucide-react";
+import HolographicNfcCard from "@/components/HolographicNfcCard";
+import { X, ShieldCheck, CheckCircle2, CreditCard, Sparkles, Package, ArrowLeft, Loader2, Lock } from "lucide-react";
 import confetti from "canvas-confetti";
 
 interface CheckoutModalProps {
@@ -15,9 +17,11 @@ interface CheckoutModalProps {
 
 export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const { items, subtotal, clearCart } = useCartStore();
+  const { formatPrice } = useCurrencyStore();
   const [step, setStep] = useState<"checkout" | "processing" | "success">("checkout");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "apple_pay" | "cyber_pay">("card");
   const [orderId, setOrderId] = useState("");
+  const [isNfcOpen, setIsNfcOpen] = useState(false);
 
   useEscapeKey(isOpen, onClose);
 
@@ -142,13 +146,26 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 </div>
                 <div className="flex justify-between text-zinc-400">
                   <span>TOTAL PAID</span>
-                  <span className="text-[#ff2a5f] font-bold">${total.toFixed(2)} USD</span>
+                  <span className="text-[#ff2a5f] font-bold">{formatPrice(total)}</span>
                 </div>
               </div>
 
+              {/* 3D Holographic NFC Certificate Trigger */}
+              <button
+                type="button"
+                onClick={() => {
+                  playUiClick();
+                  setIsNfcOpen(true);
+                }}
+                className="w-full py-3 bg-gradient-to-r from-[#141422] to-[#101018] hover:from-[#1b1b2e] hover:to-[#141422] border border-[#2b2b40] hover:border-[#00f0ff]/60 text-[#00f0ff] text-xs font-mono font-bold uppercase rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg"
+              >
+                <ShieldCheck className="w-4 h-4 text-[#00f0ff]" />
+                <span>INSPECT YOUR DIGITAL TWIN NFC CERTIFICATE</span>
+              </button>
+
               <button
                 onClick={handleCloseAndReset}
-                className="w-full py-3 bg-[#ff2a5f] hover:bg-[#ff1f58] text-white text-xs font-mono font-bold uppercase rounded-lg shadow-xl shadow-[#ff2a5f]/25 transition-all"
+                className="w-full py-3 bg-[#ff2a5f] hover:bg-[#ff1f58] text-white text-xs font-mono font-bold uppercase rounded-xl shadow-xl shadow-[#ff2a5f]/25 transition-all"
               >
                 RETURN TO STOREFRONT
               </button>
@@ -289,12 +306,17 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 type="submit"
                 className="w-full py-3.5 bg-[#ff2a5f] hover:bg-[#ff1b53] text-white font-mono text-xs font-bold uppercase tracking-widest rounded-lg shadow-xl shadow-[#ff2a5f]/25 transition-all transform hover:scale-[1.01] active:scale-[0.99]"
               >
-                PLACE DROP ORDER (${total.toFixed(2)} USD)
+                PLACE DROP ORDER ({formatPrice(total)})
               </button>
             </form>
           )}
         </div>
       </div>
+
+      <HolographicNfcCard
+        isOpen={isNfcOpen}
+        onClose={() => setIsNfcOpen(false)}
+      />
     </div>
   );
 }

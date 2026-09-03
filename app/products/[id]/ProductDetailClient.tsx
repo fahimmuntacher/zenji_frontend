@@ -14,6 +14,7 @@ import ResupplyRadarModal from "@/components/ResupplyRadarModal";
 import LookbookModal from "@/components/LookbookModal";
 import LoadoutBuilder from "@/components/LoadoutBuilder";
 import DropGateModal from "@/components/DropGateModal";
+import HolographicNfcCard from "@/components/HolographicNfcCard";
 import AudioDeck from "@/components/AudioDeck";
 import { playUiClick, playSuccessChime } from "@/lib/audio";
 import Footer from "@/components/Footer";
@@ -68,6 +69,7 @@ export default function ProductDetailClient({
   const [isLoadoutOpen, setIsLoadoutOpen] = useState(false);
   const [isDropGateOpen, setIsDropGateOpen] = useState(false);
   const [isVipUnlocked, setIsVipUnlocked] = useState(false);
+  const [isNfcOpen, setIsNfcOpen] = useState(false);
 
   const { addItem, toggleCartDrawer } = useCartStore();
   const { formatPrice } = useCurrencyStore();
@@ -393,6 +395,25 @@ export default function ProductDetailClient({
                 </span>
                 <span className="text-zinc-600">//</span>
                 <span className="text-zinc-500">SKU: {product.sku || product.id.toUpperCase()}</span>
+              </div>
+
+              {/* 3D Holographic NFC Provenance Certificate Trigger */}
+              <div className="pt-2">
+                <button
+                  onClick={() => {
+                    playUiClick();
+                    setIsNfcOpen(true);
+                  }}
+                  className="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start space-x-2 bg-gradient-to-r from-[#141422] to-[#0f0f18] hover:from-[#1b1b2e] hover:to-[#141422] border border-[#2b2b40] hover:border-[#00f0ff]/60 px-3.5 py-2 rounded-xl text-xs font-mono text-zinc-300 hover:text-white transition-all shadow-md group"
+                >
+                  <div className="flex items-center space-x-2">
+                    <ShieldCheck className="w-4 h-4 text-[#00f0ff] group-hover:rotate-12 transition-transform" />
+                    <span>CRYPTOGRAPHIC NFC AUTHENTICITY CARD</span>
+                  </div>
+                  <span className="text-[9px] bg-[#00f0ff]/15 text-[#00f0ff] px-2 py-0.5 rounded border border-[#00f0ff]/40 font-bold uppercase tracking-wider">
+                    INSPECT 3D
+                  </span>
+                </button>
               </div>
 
               {/* Price & Shipping */}
@@ -811,6 +832,12 @@ export default function ProductDetailClient({
         onClose={() => setIsDropGateOpen(false)}
         onUnlocked={() => setIsVipUnlocked(true)}
         isUnlocked={isVipUnlocked}
+      />
+
+      <HolographicNfcCard
+        product={product}
+        isOpen={isNfcOpen}
+        onClose={() => setIsNfcOpen(false)}
       />
 
       <CartDrawer onProceedToCheckout={() => setIsCheckoutOpen(true)} />
