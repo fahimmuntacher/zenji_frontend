@@ -2,6 +2,9 @@
 
 import React, { useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { SITE_CONFIG } from "@/config/site";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { playUiClick, playSuccessChime } from "@/lib/audio";
 import { X, ShieldCheck, CheckCircle2, CreditCard, Sparkles, Package, ArrowLeft, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -15,6 +18,8 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const [step, setStep] = useState<"checkout" | "processing" | "success">("checkout");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "apple_pay" | "cyber_pay">("card");
   const [orderId, setOrderId] = useState("");
+
+  useEscapeKey(isOpen, onClose);
 
   const [form, setForm] = useState({
     name: "Hiroshi Sato",
@@ -30,7 +35,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   if (!isOpen) return null;
 
   const currentSubtotal = subtotal();
-  const shipping = currentSubtotal >= 100 ? 0 : 14;
+  const shipping = currentSubtotal >= SITE_CONFIG.freeShippingThreshold ? 0 : SITE_CONFIG.standardShippingFee;
   const total = currentSubtotal + shipping;
 
   const handlePlaceOrder = (e: React.FormEvent) => {
@@ -63,7 +68,12 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Express Drop Checkout"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn"
+    >
       <div className="relative w-full max-w-xl bg-[#0e0e16] border border-[#252538] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="bg-[#13131e] px-5 py-3.5 border-b border-[#222232] flex items-center justify-between">

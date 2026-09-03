@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { ShoppingBag, Search, X, Menu, ShieldCheck, Camera, Layers, KeyRound, Zap } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
-import { playUiClick } from "./AudioDeck";
+import { SITE_CONFIG } from "@/config/site";
+import { playUiClick } from "@/lib/audio";
 
 interface NavbarProps {
   activeCategory: string;

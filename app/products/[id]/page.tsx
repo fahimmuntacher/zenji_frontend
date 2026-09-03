@@ -2,7 +2,7 @@ import productsData from "@/data/products.json";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ProductDetailClient from "./ProductDetailClient";
-import { ProductItem } from "@/components/FitMatrixModal";
+import { ProductItem } from "@/types/product";
 
 interface PageProps {
   params: Promise<{ id: string }>;

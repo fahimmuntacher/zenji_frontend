@@ -1,34 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-export interface CartItem {
-  id: string;
-  name: string;
-  japaneseTitle?: string;
-  price: number;
-  size: string;
-  imageFront: string;
-  quantity: number;
-  printType?: string;
-  gsmRating?: string;
-}
-
-interface CartStore {
-  items: CartItem[];
-  isOpen: boolean;
-  
-  // Actions
-  addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
-  removeItem: (id: string, size: string) => void;
-  updateQuantity: (id: string, size: string, delta: number) => void;
-  setQuantity: (id: string, size: string, quantity: number) => void;
-  clearCart: () => void;
-  toggleCartDrawer: (open?: boolean) => void;
-
-  // Computeds
-  totalItems: () => number;
-  subtotal: () => number;
-}
+import { CartItem, CartStore } from "@/types/cart";
 
 export const useCartStore = create<CartStore>()(
   persist(

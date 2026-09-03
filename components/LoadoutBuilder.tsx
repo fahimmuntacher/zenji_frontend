@@ -2,9 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import { X, Layers, Sparkles, ShoppingBag, Check, ShieldCheck, ArrowRight, Flame } from "lucide-react";
-import { ProductItem } from "./FitMatrixModal";
+import { ProductItem } from "@/types/product";
+import { SITE_CONFIG } from "@/config/site";
 import { useCartStore } from "@/store/useCartStore";
-import { playUiClick, playSuccessChime } from "./AudioDeck";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { playUiClick, playSuccessChime } from "@/lib/audio";
 
 interface LoadoutBuilderProps {
   isOpen: boolean;
@@ -40,11 +42,14 @@ export default function LoadoutBuilder({
 
   const [isDeploying, setIsDeploying] = useState(false);
 
+  useEscapeKey(isOpen, onClose);
+
   if (!isOpen) return null;
 
   const rawSubtotal =
     (selectedTop?.price || 0) + (selectedTee?.price || 0) + (selectedAcc?.price || 0);
-  const discountAmount = rawSubtotal * 0.15; // 15% Loadout Discount
+  const discountRate = SITE_CONFIG.loadoutDiscountPercent / 100;
+  const discountAmount = rawSubtotal * discountRate;
   const finalPrice = rawSubtotal - discountAmount;
 
   const handleDeployLoadout = () => {
@@ -100,7 +105,12 @@ export default function LoadoutBuilder({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Cyber Loadout Outfit Builder"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+    >
       <div className="relative w-full max-w-4xl bg-[#0e0e16] border border-[#27273b] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="p-4 sm:p-5 bg-[#12121c] border-b border-[#202030] flex items-center justify-between">

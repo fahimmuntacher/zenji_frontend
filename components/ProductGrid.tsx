@@ -2,9 +2,10 @@
 
 import React, { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
-import { ProductItem } from "./FitMatrixModal";
+import { ProductItem } from "@/types/product";
+import { SITE_CONFIG } from "@/config/site";
 import { ArrowUpDown, Flame, PackageX, Zap, Camera, Layers, KeyRound } from "lucide-react";
-import { playUiClick } from "./AudioDeck";
+import { playUiClick } from "@/lib/audio";
 
 interface ProductGridProps {
   products: ProductItem[];

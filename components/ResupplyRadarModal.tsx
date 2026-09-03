@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import { X, BellRing, ShieldAlert, CheckCircle2, Users, Flame, Sparkles } from "lucide-react";
-import { ProductItem } from "./FitMatrixModal";
-import { playUiClick, playSuccessChime } from "./AudioDeck";
+import { ProductItem } from "@/types/product";
+import { SITE_CONFIG } from "@/config/site";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { playUiClick, playSuccessChime } from "@/lib/audio";
 
 interface ResupplyRadarModalProps {
   product: ProductItem | null;
@@ -21,10 +23,12 @@ export default function ResupplyRadarModal({
   const [preferredSize, setPreferredSize] = useState("L");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  useEscapeKey(isOpen, onClose);
+
   if (!isOpen || !product) return null;
 
   const currentPledges = 164;
-  const targetPledges = 200;
+  const targetPledges = SITE_CONFIG.resupplyTargetPledges;
   const progress = Math.round((currentPledges / targetPledges) * 100);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,7 +45,12 @@ export default function ResupplyRadarModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Re-Supply Scarcity Radar"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+    >
       <div className="relative w-full max-w-lg bg-[#0e0e16] border border-[#27273a] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-4 sm:p-5 bg-[#12121c] border-b border-[#202030] flex items-center justify-between">

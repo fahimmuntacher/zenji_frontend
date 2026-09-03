@@ -2,10 +2,10 @@
 
 import React, { useState, useRef } from "react";
 import Link from "next/link";
-import { ProductItem } from "./FitMatrixModal";
+import { ProductItem } from "@/types/product";
 import { useCartStore } from "@/store/useCartStore";
 import { ShoppingBag, Sliders, Sparkles, Zap, Eye, Check, BellRing, ZoomIn } from "lucide-react";
-import { playUiClick, playSuccessChime } from "./AudioDeck";
+import { playUiClick, playSuccessChime } from "@/lib/audio";
 
 interface ProductCardProps {
   product: ProductItem;

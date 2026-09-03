@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { SITE_CONFIG } from "@/config/site";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Sparkles, Truck } from "lucide-react";
 
 interface CartDrawerProps {
@@ -25,6 +27,8 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
     setMounted(true);
   }, []);
 
+  useEscapeKey(isOpen, () => toggleCartDrawer(false));
+
   // Prevent background scrolling when drawer is open
   useEffect(() => {
     if (isOpen) {
@@ -40,13 +44,18 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
   if (!mounted || !isOpen) return null;
 
   const currentSubtotal = subtotal();
-  const shippingThreshold = 100;
+  const shippingThreshold = SITE_CONFIG.freeShippingThreshold;
   const isFreeShipping = currentSubtotal >= shippingThreshold;
   const amountNeeded = Math.max(0, shippingThreshold - currentSubtotal);
   const progressPercent = Math.min(100, (currentSubtotal / shippingThreshold) * 100);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Shopping Cart Drawer"
+      className="fixed inset-0 z-50 flex justify-end animate-fadeIn"
+    >
       {/* Backdrop */}
       <div
         onClick={() => toggleCartDrawer(false)}

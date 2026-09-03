@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ProductItem } from "@/components/FitMatrixModal";
+import { ProductItem } from "@/types/product";
 import { useCartStore } from "@/store/useCartStore";
+import { SITE_CONFIG } from "@/config/site";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import CheckoutModal from "@/components/CheckoutModal";
@@ -12,7 +13,8 @@ import ResupplyRadarModal from "@/components/ResupplyRadarModal";
 import LookbookModal from "@/components/LookbookModal";
 import LoadoutBuilder from "@/components/LoadoutBuilder";
 import DropGateModal from "@/components/DropGateModal";
-import AudioDeck, { playUiClick, playSuccessChime } from "@/components/AudioDeck";
+import AudioDeck from "@/components/AudioDeck";
+import { playUiClick, playSuccessChime } from "@/lib/audio";
 import Footer from "@/components/Footer";
 import {
   ArrowLeft,

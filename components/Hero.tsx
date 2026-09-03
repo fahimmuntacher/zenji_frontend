@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { ArrowDownRight, Flame, Layers, Sliders, Camera, Zap } from "lucide-react";
-import { playUiClick } from "./AudioDeck";
+import { SITE_CONFIG } from "@/config/site";
+import { playUiClick } from "@/lib/audio";
 
 interface HeroProps {
   onOpenFitMatrixGeneral?: () => void;

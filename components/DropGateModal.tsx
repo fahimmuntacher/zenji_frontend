@@ -3,7 +3,9 @@
 import React, { useState } from "react";
 import { X, Lock, Unlock, ShieldAlert, CheckCircle2, KeyRound, Sparkles, Terminal } from "lucide-react";
 import confetti from "canvas-confetti";
-import { playUiClick, playSuccessChime } from "./AudioDeck";
+import { SITE_CONFIG } from "@/config/site";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { playUiClick, playSuccessChime } from "@/lib/audio";
 
 interface DropGateModalProps {
   isOpen: boolean;
@@ -25,6 +27,8 @@ export default function DropGateModal({
     glyph2: "道",
     glyph3: "零",
   });
+
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -61,7 +65,7 @@ export default function DropGateModal({
     e.preventDefault();
     playUiClick();
     const clean = passcode.trim().toUpperCase();
-    if (clean === "SHIBUYA2099" || clean === "ZENJI" || clean === "AKIRA") {
+    if ((SITE_CONFIG.vipPasscodes as readonly string[]).includes(clean)) {
       triggerUnlock("VIP-SHIBUYA-PASS");
     } else {
       setError(true);
@@ -83,7 +87,12 @@ export default function DropGateModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="VIP Vault Drop Gate"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+    >
       <div className="relative w-full max-w-md bg-[#0e0e16] border border-[#28283c] rounded-2xl shadow-2xl overflow-hidden flex flex-col font-mono">
         {/* Header */}
         <div className="p-4 bg-[#12121c] border-b border-[#202030] flex items-center justify-between">

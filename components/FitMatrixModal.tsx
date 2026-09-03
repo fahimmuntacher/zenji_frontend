@@ -3,31 +3,10 @@
 import React, { useState, useMemo } from "react";
 import { X, Check, Ruler, Sparkles, Sliders, ShieldCheck, ShoppingBag, Eye } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
+import { ProductItem, MeasurementDetail } from "@/types/product";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
 
-export interface MeasurementDetail {
-  chest: string;
-  length: string;
-  shoulder: string;
-}
-
-export interface ProductItem {
-  id: string;
-  name: string;
-  japaneseTitle?: string;
-  price: number;
-  category: string;
-  sizes: string[];
-  printType: string;
-  gsmRating: string;
-  fitType: string;
-  stock: number;
-  featured?: boolean;
-  description: string;
-  printDetails?: string;
-  measurements?: Record<string, MeasurementDetail | undefined>;
-  imageFront: string;
-  imageBack: string;
-}
+export type { ProductItem, MeasurementDetail };
 
 interface FitMatrixModalProps {
   product: ProductItem | null;
@@ -114,6 +93,8 @@ export default function FitMatrixModal({
     }
   }, [calculatedRecommendation.size]);
 
+  useEscapeKey(isOpen, onClose);
+
   if (!isOpen || !product) return null;
 
   const handleAddToCart = () => {
@@ -139,7 +120,12 @@ export default function FitMatrixModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fit-matrix-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn"
+    >
       <div className="relative w-full max-w-2xl bg-[#0e0e16] border border-[#262638] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Modal Header */}
         <div className="bg-[#141420] px-5 py-3.5 border-b border-[#232334] flex items-center justify-between">
