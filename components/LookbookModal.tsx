@@ -30,6 +30,67 @@ interface LookbookModalProps {
   onOpenProductFit: (product: ProductItem) => void;
 }
 
+const LOOKBOOK_ITEMS: LookbookItem[] = [
+  {
+    id: "look-01",
+    modelName: "Ren Takahashi",
+    location: "Center-gai, Shibuya",
+    height: "5'10\" (178 cm)",
+    heightCm: 178,
+    weight: "163 lbs (74 kg)",
+    weightKg: 74,
+    sizeWorn: "Size L (Boxy Drape)",
+    fitStyle: "Tokyo Cyber Drop Shoulder",
+    quote: "The 450 GSM weight doesn't collapse on shoulders; it creates a clean, architectural silhouette under night lights.",
+    imageUrl: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80",
+    primaryProductId: "zenji-01",
+    accessoryId: "zenji-07",
+  },
+  {
+    id: "look-02",
+    modelName: "Aoi Minami",
+    location: "Cat Street, Harajuku",
+    height: "5'5\" (165 cm)",
+    heightCm: 165,
+    weight: "119 lbs (54 kg)",
+    weightKg: 54,
+    sizeWorn: "Size M (Oversized)",
+    fitStyle: "Boxy Oversized Fit",
+    quote: "Wearing the Kaiju Tee in Size M gives the exact cropped-boxy aesthetic without drowning my frame.",
+    imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80",
+    primaryProductId: "zenji-02",
+  },
+  {
+    id: "look-03",
+    modelName: "Kenzo Sato",
+    location: "Miyashita Park Deck",
+    height: "6'1\" (185 cm)",
+    heightCm: 185,
+    weight: "185 lbs (84 kg)",
+    weightKg: 84,
+    sizeWorn: "Size XL (Drop Shoulder)",
+    fitStyle: "Tokyo Cyber Drop Shoulder",
+    quote: "The tactical bomber paired with the 3D puff hoodie has genuine wind-resistance. The Fidlock buckle is heavy hardware.",
+    imageUrl: "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80",
+    primaryProductId: "zenji-03",
+    accessoryId: "zenji-08",
+  },
+  {
+    id: "look-04",
+    modelName: "Yuki Tanaka",
+    location: "Akihabara Radiokaikan",
+    height: "5'8\" (172 cm)",
+    heightCm: 172,
+    weight: "145 lbs (66 kg)",
+    weightKg: 66,
+    sizeWorn: "Size L (Drape)",
+    fitStyle: "Boxy Oversized Fit",
+    quote: "The purple evangelist dye with Tatami kanji embroidery catches high-contrast flash. Size L was spot on.",
+    imageUrl: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80",
+    primaryProductId: "zenji-04",
+  },
+];
+
 export default function LookbookModal({
   isOpen,
   onClose,
@@ -43,77 +104,14 @@ export default function LookbookModal({
 
   useEscapeKey(isOpen, onClose);
 
-  if (!isOpen) return null;
-
-  const looks: LookbookItem[] = [
-    {
-      id: "look-01",
-      modelName: "Ren Takahashi",
-      location: "Center-gai, Shibuya",
-      height: "5'10\" (178 cm)",
-      heightCm: 178,
-      weight: "163 lbs (74 kg)",
-      weightKg: 74,
-      sizeWorn: "Size L (Boxy Drape)",
-      fitStyle: "Tokyo Cyber Drop Shoulder",
-      quote: "The 450 GSM weight doesn't collapse on shoulders; it creates a clean, architectural silhouette under night lights.",
-      imageUrl: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80",
-      primaryProductId: "zenji-01",
-      accessoryId: "zenji-07",
-    },
-    {
-      id: "look-02",
-      modelName: "Aoi Minami",
-      location: "Cat Street, Harajuku",
-      height: "5'5\" (165 cm)",
-      heightCm: 165,
-      weight: "119 lbs (54 kg)",
-      weightKg: 54,
-      sizeWorn: "Size M (Oversized)",
-      fitStyle: "Boxy Oversized Fit",
-      quote: "Wearing the Kaiju Tee in Size M gives the exact cropped-boxy aesthetic without drowning my frame.",
-      imageUrl: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80",
-      primaryProductId: "zenji-02",
-    },
-    {
-      id: "look-03",
-      modelName: "Kenzo Sato",
-      location: "Miyashita Park Deck",
-      height: "6'1\" (185 cm)",
-      heightCm: 185,
-      weight: "185 lbs (84 kg)",
-      weightKg: 84,
-      sizeWorn: "Size XL (Drop Shoulder)",
-      fitStyle: "Tokyo Cyber Drop Shoulder",
-      quote: "The tactical bomber paired with the 3D puff hoodie has genuine wind-resistance. The Fidlock buckle is heavy hardware.",
-      imageUrl: "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80",
-      primaryProductId: "zenji-03",
-      accessoryId: "zenji-08",
-    },
-    {
-      id: "look-04",
-      modelName: "Yuki Tanaka",
-      location: "Akihabara Radiokaikan",
-      height: "5'8\" (172 cm)",
-      heightCm: 172,
-      weight: "145 lbs (66 kg)",
-      weightKg: 66,
-      sizeWorn: "Size L (Drape)",
-      fitStyle: "Boxy Oversized Fit",
-      quote: "The purple evangelist dye with Tatami kanji embroidery catches high-contrast flash. Size L was spot on.",
-      imageUrl: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80",
-      primaryProductId: "zenji-04",
-    },
-  ];
-
   const filteredLooks = useMemo(() => {
-    return looks.filter((l) => {
+    return LOOKBOOK_ITEMS.filter((l) => {
       if (heightFilter === "short") return l.heightCm < 170;
       if (heightFilter === "medium") return l.heightCm >= 170 && l.heightCm <= 180;
       if (heightFilter === "tall") return l.heightCm > 180;
       return true;
     });
-  }, [looks, heightFilter]);
+  }, [heightFilter]);
 
   if (!isOpen) return null;
 
