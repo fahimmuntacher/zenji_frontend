@@ -34,6 +34,7 @@ export const metadata: Metadata = {
 };
 
 import GlobalRainWrapper from "@/components/GlobalRainWrapper";
+import AnimeCursor from "@/components/AnimeCursor";
 
 export default function RootLayout({
   children,
@@ -46,6 +47,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
     >
       <body className="min-h-screen bg-[#08080b] text-zinc-100 flex flex-col font-sans">
+        <AnimeCursor />
         <GlobalRainWrapper />
         {children}
       </body>
