@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import productsData from "@/data/products.json";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -16,7 +17,9 @@ import AudioDeck from "@/components/AudioDeck";
 import Footer from "@/components/Footer";
 import { useCartStore } from "@/store/useCartStore";
 
-export default function StorefrontPage() {
+function StorefrontContent() {
+  const searchParams = useSearchParams();
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFitProduct, setSelectedFitProduct] = useState<ProductItem | null>(null);
@@ -36,6 +39,26 @@ export default function StorefrontPage() {
   const { toggleCartDrawer } = useCartStore();
   const products = productsData as unknown as ProductItem[];
 
+  // Sync category or search query from URL search parameters (e.g. from /products/[id])
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setActiveCategory(cat);
+      const catalogEl = document.getElementById("catalog");
+      if (catalogEl) {
+        catalogEl.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    const q = searchParams.get("search");
+    if (q) {
+      setSearchQuery(q);
+      const catalogEl = document.getElementById("catalog");
+      if (catalogEl) {
+        catalogEl.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [searchParams]);
+
   const handleOpenFitMatrix = (product: ProductItem) => {
     setSelectedFitProduct(product);
     setIsFitMatrixOpen(true);
@@ -51,9 +74,11 @@ export default function StorefrontPage() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col transition-colors duration-500 ${
-      globalFlashCam ? "bg-[#050508] text-zinc-100" : "bg-[#08080b] text-white"
-    }`}>
+    <div
+      className={`min-h-screen flex flex-col transition-colors duration-500 ${
+        globalFlashCam ? "bg-[#050508] text-zinc-100" : "bg-[#08080b] text-white"
+      }`}
+    >
       {/* Sticky Header with Cart Count, Search, & Navigation */}
       <Navbar
         activeCategory={activeCategory}
@@ -133,9 +158,7 @@ export default function StorefrontPage() {
       />
 
       {/* Zustand-Powered Slide-Over Cart Drawer */}
-      <CartDrawer
-        onProceedToCheckout={() => setIsCheckoutOpen(true)}
-      />
+      <CartDrawer onProceedToCheckout={() => setIsCheckoutOpen(true)} />
 
       {/* Mock Checkout Modal with Confetti */}
       <CheckoutModal
@@ -149,5 +172,13 @@ export default function StorefrontPage() {
       {/* Rich Cyberpunk Footer */}
       <Footer />
     </div>
+  );
+}
+
+export default function StorefrontPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#08080b]" />}>
+      <StorefrontContent />
+    </Suspense>
   );
 }

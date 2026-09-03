@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { ShoppingBag, Search, X, Menu, ShieldCheck, Camera, Layers, KeyRound, Zap } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
 import { playUiClick } from "./AudioDeck";
@@ -30,9 +32,14 @@ export default function Navbar({
   onToggleGlobalFlashCam,
   isVipUnlocked,
 }: NavbarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [localSearch, setLocalSearch] = useState(searchQuery);
   const [mounted, setMounted] = useState(false);
 
   const { toggleCartDrawer, totalItems } = useCartStore();
@@ -46,6 +53,10 @@ export default function Navbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    setLocalSearch(searchQuery);
+  }, [searchQuery]);
+
   const categories = [
     { label: "ALL PIECES", value: "All" },
     { label: "HOODIES", value: "Hoodies" },
@@ -53,6 +64,42 @@ export default function Navbar({
     { label: "OUTERWEAR", value: "Outerwear" },
     { label: "ACCESSORIES", value: "Accessories" },
   ];
+
+  const handleCategoryClick = (catValue: string) => {
+    playUiClick();
+    if (isHomePage) {
+      onSelectCategory(catValue);
+      const catalogEl = document.getElementById("catalog");
+      if (catalogEl) {
+        catalogEl.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      router.push(`/?category=${encodeURIComponent(catValue)}#catalog`);
+    }
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    playUiClick();
+    if (isHomePage) {
+      e.preventDefault();
+      onSelectCategory("All");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      playUiClick();
+      if (isHomePage) {
+        const catalogEl = document.getElementById("catalog");
+        if (catalogEl) {
+          catalogEl.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        router.push(`/?search=${encodeURIComponent(localSearch)}#catalog`);
+      }
+    }
+  };
 
   const itemCount = mounted ? totalItems() : 0;
 
@@ -101,14 +148,11 @@ export default function Navbar({
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
+          {/* Brand Logo - Route aware Link to Home */}
           <div className="flex items-center space-x-3">
-            <button
-              onClick={() => {
-                playUiClick();
-                onSelectCategory("All");
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+            <Link
+              href="/"
+              onClick={handleLogoClick}
               className="flex items-center space-x-2 group text-left"
             >
               <div className="w-9 h-9 bg-gradient-to-br from-[#ff2a5f] to-[#791530] rounded-sm flex items-center justify-center font-bold text-white shadow-lg shadow-[#ff2a5f]/20 group-hover:scale-105 transition-transform">
@@ -127,24 +171,17 @@ export default function Navbar({
                   Cyberpunk Streetwear
                 </p>
               </div>
-            </button>
+            </Link>
           </div>
 
-          {/* Desktop Categories & Quick Links */}
+          {/* Desktop Categories - Route aware navigation */}
           <nav className="hidden lg:flex items-center space-x-1 bg-[#101017]/80 border border-[#1f1f2e] p-1 rounded-full">
             {categories.map((cat) => {
-              const active = activeCategory === cat.value;
+              const active = isHomePage && activeCategory === cat.value;
               return (
                 <button
                   key={cat.value}
-                  onClick={() => {
-                    playUiClick();
-                    onSelectCategory(cat.value);
-                    const catalogEl = document.getElementById("catalog");
-                    if (catalogEl) {
-                      catalogEl.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
+                  onClick={() => handleCategoryClick(cat.value)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wider transition-all duration-200 ${
                     active
                       ? "bg-[#ff2a5f] text-white shadow-md shadow-[#ff2a5f]/25 font-semibold"
@@ -207,9 +244,13 @@ export default function Navbar({
                   <Search className="w-3.5 h-3.5 text-zinc-400 mr-2 shrink-0" />
                   <input
                     type="text"
-                    placeholder="Search drop..."
-                    value={searchQuery}
-                    onChange={(e) => onSearchChange(e.target.value)}
+                    placeholder="Search drop (Enter)..."
+                    value={localSearch}
+                    onChange={(e) => {
+                      setLocalSearch(e.target.value);
+                      onSearchChange(e.target.value);
+                    }}
+                    onKeyDown={handleSearchKeyDown}
                     autoFocus
                     className="bg-transparent text-white focus:outline-none w-full placeholder-zinc-500 font-mono text-[11px]"
                   />
@@ -217,6 +258,7 @@ export default function Navbar({
                     onClick={() => {
                       playUiClick();
                       setSearchOpen(false);
+                      setLocalSearch("");
                       onSearchChange("");
                     }}
                     className="text-zinc-400 hover:text-white ml-1"
@@ -317,22 +359,17 @@ export default function Navbar({
                 <button
                   key={cat.value}
                   onClick={() => {
-                    playUiClick();
-                    onSelectCategory(cat.value);
                     setMobileMenuOpen(false);
-                    const catalogEl = document.getElementById("catalog");
-                    if (catalogEl) {
-                      catalogEl.scrollIntoView({ behavior: "smooth" });
-                    }
+                    handleCategoryClick(cat.value);
                   }}
                   className={`text-left px-4 py-2.5 rounded-lg text-xs font-mono tracking-wider transition-colors flex items-center justify-between ${
-                    activeCategory === cat.value
+                    isHomePage && activeCategory === cat.value
                       ? "bg-[#ff2a5f]/15 text-[#ff2a5f] font-bold border border-[#ff2a5f]/30"
                       : "text-zinc-300 hover:bg-zinc-800/40"
                   }`}
                 >
                   <span>{cat.label}</span>
-                  {activeCategory === cat.value && (
+                  {isHomePage && activeCategory === cat.value && (
                     <span className="w-1.5 h-1.5 rounded-full bg-[#ff2a5f]" />
                   )}
                 </button>

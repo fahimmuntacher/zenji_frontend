@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import { ProductItem } from "./FitMatrixModal";
 import { useCartStore } from "@/store/useCartStore";
 import { ShoppingBag, Sliders, Sparkles, Zap, Eye, Check, BellRing, ZoomIn } from "lucide-react";
@@ -203,6 +204,32 @@ export default function ProductCard({
           </button>
         </div>
 
+        {/* Quick Actions on Hover */}
+        <div
+          className={`absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center p-4 space-y-2.5 transition-opacity duration-300 z-15 ${
+            isHovered && !loupeActive ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          <Link
+            href={`/products/${product.id}`}
+            onClick={() => playUiClick()}
+            className="w-full max-w-[190px] px-4 py-2 bg-[#ff2a5f] hover:bg-[#ff1f58] text-white text-xs font-mono font-bold rounded-lg shadow-xl flex items-center justify-center space-x-1.5 transition-all transform hover:scale-105"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>VIEW PIECE DETAILS</span>
+          </Link>
+          <button
+            onClick={() => {
+              playUiClick();
+              onOpenFitMatrix(product);
+            }}
+            className="w-full max-w-[190px] px-3 py-1.5 bg-[#141420]/90 hover:bg-[#1f1f2e] text-zinc-200 border border-[#2b2b3d] text-[11px] font-mono rounded-lg shadow-xl flex items-center justify-center space-x-1.5 transition-all"
+          >
+            <Sliders className="w-3 h-3 text-[#00f0ff]" />
+            <span>FIT-MATRIX RADAR</span>
+          </button>
+        </div>
+
         {/* Bottom Technical Spec Badges */}
         <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5 pointer-events-none z-20">
           <span className="bg-[#08080c]/90 backdrop-blur-md border border-[#252536] text-white text-[9px] font-mono px-2 py-0.5 rounded">
@@ -226,9 +253,11 @@ export default function ProductCard({
             </span>
           </div>
 
-          <h3 className="font-mono font-bold text-sm text-white group-hover:text-[#ff2a5f] transition-colors line-clamp-1">
-            {product.name}
-          </h3>
+          <Link href={`/products/${product.id}`}>
+            <h3 className="font-mono font-bold text-sm text-white hover:text-[#ff2a5f] transition-colors line-clamp-1 cursor-pointer">
+              {product.name}
+            </h3>
+          </Link>
 
           <p className="text-[11px] text-zinc-400 line-clamp-2 leading-relaxed">
             {product.description}
