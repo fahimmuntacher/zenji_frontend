@@ -3,7 +3,8 @@
 import React, { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import { ProductItem } from "./FitMatrixModal";
-import { SlidersHorizontal, ArrowUpDown, Flame, PackageX, Sparkles } from "lucide-react";
+import { ArrowUpDown, Flame, PackageX, Zap, Camera, Layers, KeyRound } from "lucide-react";
+import { playUiClick } from "./AudioDeck";
 
 interface ProductGridProps {
   products: ProductItem[];
@@ -12,6 +13,13 @@ interface ProductGridProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onOpenFitMatrix: (product: ProductItem) => void;
+  onOpenResupplyRadar: (product: ProductItem) => void;
+  onOpenLookbook: () => void;
+  onOpenLoadoutBuilder: () => void;
+  onOpenDropGate: () => void;
+  globalFlashCam: boolean;
+  onToggleGlobalFlashCam: () => void;
+  isVipUnlocked: boolean;
 }
 
 export default function ProductGrid({
@@ -21,6 +29,13 @@ export default function ProductGrid({
   searchQuery,
   onSearchChange,
   onOpenFitMatrix,
+  onOpenResupplyRadar,
+  onOpenLookbook,
+  onOpenLoadoutBuilder,
+  onOpenDropGate,
+  globalFlashCam,
+  onToggleGlobalFlashCam,
+  isVipUnlocked,
 }: ProductGridProps) {
   const [sortBy, setSortBy] = useState<"featured" | "price_asc" | "price_desc" | "stock">(
     "featured"
@@ -63,7 +78,6 @@ export default function ProductGrid({
     } else if (sortBy === "stock") {
       list.sort((a, b) => a.stock - b.stock);
     } else {
-      // featured first, then id
       list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
     return list;
@@ -72,7 +86,7 @@ export default function ProductGrid({
   return (
     <section id="catalog" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-6 border-b border-[#1c1c2b] gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 pb-6 border-b border-[#1c1c2b] gap-4">
         <div>
           <div className="flex items-center space-x-2 text-xs font-mono text-[#ff2a5f] tracking-widest uppercase">
             <Flame className="w-3.5 h-3.5" />
@@ -85,11 +99,64 @@ export default function ProductGrid({
           </h2>
         </div>
 
-        {/* Status Count */}
-        <div className="text-xs font-mono text-zinc-400 flex items-center space-x-3">
-          <span className="bg-[#12121b] border border-[#232333] px-3 py-1.5 rounded-full">
-            SHOWING <strong className="text-white">{sortedProducts.length}</strong> OF {products.length} PIECES
-          </span>
+        {/* Action Hub Pills: Lookbook, Loadout, VIP Gate, Global Flash Cam */}
+        <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+          {/* Global 3M Flash Cam Mode */}
+          <button
+            onClick={() => {
+              playUiClick();
+              onToggleGlobalFlashCam();
+            }}
+            className={`px-3 py-1.5 rounded-lg border flex items-center space-x-1.5 transition-all ${
+              globalFlashCam
+                ? "bg-[#00f0ff] text-black font-bold border-[#00f0ff] shadow-lg shadow-[#00f0ff]/30"
+                : "bg-[#141420] text-zinc-300 hover:text-white border-[#27273a]"
+            }`}
+            title="Toggle 3M Reflective Flash on all items"
+          >
+            <Zap className={`w-3.5 h-3.5 ${globalFlashCam ? "fill-black" : "text-[#00f0ff]"}`} />
+            <span>{globalFlashCam ? "3M FLASH CAM: ON" : "3M FLASH CAM"}</span>
+          </button>
+
+          {/* Lookbook Trigger */}
+          <button
+            onClick={() => {
+              playUiClick();
+              onOpenLookbook();
+            }}
+            className="px-3 py-1.5 rounded-lg bg-[#141420] hover:bg-[#1d1d2e] border border-[#27273a] text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors"
+          >
+            <Camera className="w-3.5 h-3.5 text-[#ff2a5f]" />
+            <span>STREET LOOKBOOK</span>
+          </button>
+
+          {/* Cyber Loadout Builder */}
+          <button
+            onClick={() => {
+              playUiClick();
+              onOpenLoadoutBuilder();
+            }}
+            className="px-3 py-1.5 rounded-lg bg-[#141420] hover:bg-[#1d1d2e] border border-[#27273a] text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors"
+          >
+            <Layers className="w-3.5 h-3.5 text-amber-400" />
+            <span>LOADOUT BUILDER (-15%)</span>
+          </button>
+
+          {/* VIP Drop Gate */}
+          <button
+            onClick={() => {
+              playUiClick();
+              onOpenDropGate();
+            }}
+            className={`px-3 py-1.5 rounded-lg border flex items-center space-x-1.5 transition-all ${
+              isVipUnlocked
+                ? "bg-emerald-950 text-emerald-300 border-emerald-700"
+                : "bg-[#141420] hover:bg-[#1d1d2e] border-[#27273a] text-zinc-300 hover:text-white"
+            }`}
+          >
+            <KeyRound className={`w-3.5 h-3.5 ${isVipUnlocked ? "text-emerald-400" : "text-[#ff2a5f]"}`} />
+            <span>{isVipUnlocked ? "VIP UNLOCKED" : "VAULT GATE"}</span>
+          </button>
         </div>
       </div>
 
@@ -102,7 +169,10 @@ export default function ProductGrid({
             return (
               <button
                 key={cat.value}
-                onClick={() => onSelectCategory(cat.value)}
+                onClick={() => {
+                  playUiClick();
+                  onSelectCategory(cat.value);
+                }}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all ${
                   isActive
                     ? "bg-[#ff2a5f] text-white font-bold shadow-md shadow-[#ff2a5f]/20"
@@ -115,13 +185,18 @@ export default function ProductGrid({
           })}
         </div>
 
-        {/* Sort Dropdown */}
-        <div className="flex items-center space-x-2 w-full lg:w-auto justify-end">
-          <span className="text-xs font-mono text-zinc-500 hidden sm:inline">SORT BY:</span>
+        {/* Sort Dropdown & Pieces Counter */}
+        <div className="flex items-center space-x-3 w-full lg:w-auto justify-end text-xs font-mono">
+          <span className="text-zinc-500 hidden sm:inline">
+            SHOWING <strong className="text-white">{sortedProducts.length}</strong> PIECES
+          </span>
           <div className="relative">
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => {
+                playUiClick();
+                setSortBy(e.target.value as any);
+              }}
               className="bg-[#12121b] border border-[#242436] hover:border-[#ff2a5f]/40 text-xs font-mono text-zinc-200 py-2 pl-3 pr-8 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#ff2a5f]"
             >
               <option value="featured">Featured Drops</option>
@@ -142,6 +217,8 @@ export default function ProductGrid({
               key={product.id}
               product={product}
               onOpenFitMatrix={onOpenFitMatrix}
+              onOpenResupplyRadar={onOpenResupplyRadar}
+              globalFlashCam={globalFlashCam}
             />
           ))}
         </div>
@@ -158,6 +235,7 @@ export default function ProductGrid({
           </div>
           <button
             onClick={() => {
+              playUiClick();
               onSelectCategory("All");
               onSearchChange("");
             }}

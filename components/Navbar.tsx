@@ -1,14 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShoppingBag, Search, X, Menu, Flame, ShieldCheck, Sparkles } from "lucide-react";
+import { ShoppingBag, Search, X, Menu, ShieldCheck, Camera, Layers, KeyRound, Zap } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
+import { playUiClick } from "./AudioDeck";
 
 interface NavbarProps {
   activeCategory: string;
   onSelectCategory: (category: string) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  onOpenLookbook: () => void;
+  onOpenLoadoutBuilder: () => void;
+  onOpenDropGate: () => void;
+  globalFlashCam: boolean;
+  onToggleGlobalFlashCam: () => void;
+  isVipUnlocked: boolean;
 }
 
 export default function Navbar({
@@ -16,6 +23,12 @@ export default function Navbar({
   onSelectCategory,
   searchQuery,
   onSearchChange,
+  onOpenLookbook,
+  onOpenLoadoutBuilder,
+  onOpenDropGate,
+  globalFlashCam,
+  onToggleGlobalFlashCam,
+  isVipUnlocked,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,10 +70,23 @@ export default function Navbar({
           </div>
 
           <div className="flex items-center space-x-4 text-[10px]">
-            <span className="flex items-center text-zinc-400">
-              <ShieldCheck className="w-3 h-3 mr-1 text-[#00f0ff]" />
-              AUTHENTIC 380+ GSM
-            </span>
+            {isVipUnlocked ? (
+              <span className="text-emerald-400 font-bold flex items-center">
+                <KeyRound className="w-3 h-3 mr-1" />
+                VIP 20% ACTIVE
+              </span>
+            ) : (
+              <button
+                onClick={() => {
+                  playUiClick();
+                  onOpenDropGate();
+                }}
+                className="hover:text-white text-zinc-400 flex items-center transition-colors"
+              >
+                <KeyRound className="w-3 h-3 mr-1 text-[#ff2a5f]" />
+                UNLOCK VAULT
+              </button>
+            )}
             <span className="hidden sm:inline text-zinc-500">SHIBUYA, TOKYO</span>
           </div>
         </div>
@@ -79,6 +105,7 @@ export default function Navbar({
           <div className="flex items-center space-x-3">
             <button
               onClick={() => {
+                playUiClick();
                 onSelectCategory("All");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
@@ -103,7 +130,7 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Desktop Categories */}
+          {/* Desktop Categories & Quick Links */}
           <nav className="hidden lg:flex items-center space-x-1 bg-[#101017]/80 border border-[#1f1f2e] p-1 rounded-full">
             {categories.map((cat) => {
               const active = activeCategory === cat.value;
@@ -111,13 +138,14 @@ export default function Navbar({
                 <button
                   key={cat.value}
                   onClick={() => {
+                    playUiClick();
                     onSelectCategory(cat.value);
                     const catalogEl = document.getElementById("catalog");
                     if (catalogEl) {
                       catalogEl.scrollIntoView({ behavior: "smooth" });
                     }
                   }}
-                  className={`px-4 py-1.5 rounded-full text-xs font-medium tracking-wider transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wider transition-all duration-200 ${
                     active
                       ? "bg-[#ff2a5f] text-white shadow-md shadow-[#ff2a5f]/25 font-semibold"
                       : "text-zinc-400 hover:text-white hover:bg-zinc-800/40"
@@ -129,16 +157,57 @@ export default function Navbar({
             })}
           </nav>
 
-          {/* Right Actions: Search & Cart */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Right Actions: Flash Cam, Search, Lookbook, Loadout & Cart */}
+          <div className="flex items-center space-x-2 sm:space-x-2.5">
+            {/* 3M Flash Cam Quick Toggle */}
+            <button
+              onClick={() => {
+                playUiClick();
+                onToggleGlobalFlashCam();
+              }}
+              className={`hidden md:flex items-center space-x-1 px-3 py-1.5 rounded-full border text-xs font-mono transition-all ${
+                globalFlashCam
+                  ? "bg-[#00f0ff] text-black font-bold border-[#00f0ff] shadow-md shadow-[#00f0ff]/30"
+                  : "bg-[#12121a] hover:bg-[#1a1a28] border-[#252538] text-zinc-300"
+              }`}
+              title="Toggle 3M Reflective Flash on all garments"
+            >
+              <Zap className={`w-3.5 h-3.5 ${globalFlashCam ? "fill-black" : "text-[#00f0ff]"}`} />
+              <span className="hidden xl:inline">{globalFlashCam ? "3M FLASH" : "3M MODE"}</span>
+            </button>
+
+            {/* Lookbook Button */}
+            <button
+              onClick={() => {
+                playUiClick();
+                onOpenLookbook();
+              }}
+              className="hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full bg-[#12121a] hover:bg-[#1a1a28] border border-[#252538] text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+            >
+              <Camera className="w-3.5 h-3.5 text-[#ff2a5f]" />
+              <span className="hidden xl:inline">LOOKBOOK</span>
+            </button>
+
+            {/* Loadout Builder Button */}
+            <button
+              onClick={() => {
+                playUiClick();
+                onOpenLoadoutBuilder();
+              }}
+              className="hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full bg-[#12121a] hover:bg-[#1a1a28] border border-[#252538] text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+            >
+              <Layers className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden xl:inline">LOADOUT</span>
+            </button>
+
             {/* Search Toggle */}
             <div className="relative">
               {searchOpen ? (
-                <div className="flex items-center bg-[#13131c] border border-[#ff2a5f]/50 rounded-full px-3 py-1.5 text-xs w-48 sm:w-64 transition-all">
+                <div className="flex items-center bg-[#13131c] border border-[#ff2a5f]/50 rounded-full px-3 py-1.5 text-xs w-44 sm:w-56 transition-all">
                   <Search className="w-3.5 h-3.5 text-zinc-400 mr-2 shrink-0" />
                   <input
                     type="text"
-                    placeholder="Search drops, print, gsm..."
+                    placeholder="Search drop..."
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
                     autoFocus
@@ -146,6 +215,7 @@ export default function Navbar({
                   />
                   <button
                     onClick={() => {
+                      playUiClick();
                       setSearchOpen(false);
                       onSearchChange("");
                     }}
@@ -156,8 +226,11 @@ export default function Navbar({
                 </div>
               ) : (
                 <button
-                  onClick={() => setSearchOpen(true)}
-                  className="w-10 h-10 rounded-full bg-[#12121a] hover:bg-[#1a1a26] border border-[#232333] flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+                  onClick={() => {
+                    playUiClick();
+                    setSearchOpen(true);
+                  }}
+                  className="w-9 h-9 rounded-full bg-[#12121a] hover:bg-[#1a1a26] border border-[#232333] flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
                   aria-label="Search items"
                 >
                   <Search className="w-4 h-4" />
@@ -167,8 +240,11 @@ export default function Navbar({
 
             {/* Cart Drawer Trigger */}
             <button
-              onClick={() => toggleCartDrawer(true)}
-              className="relative flex items-center space-x-2 bg-[#12121a] hover:bg-[#1a1a28] border border-[#28283a] hover:border-[#ff2a5f]/50 px-3.5 py-2 rounded-full text-zinc-200 transition-all group"
+              onClick={() => {
+                playUiClick();
+                toggleCartDrawer(true);
+              }}
+              className="relative flex items-center space-x-1.5 bg-[#12121a] hover:bg-[#1a1a28] border border-[#28283a] hover:border-[#ff2a5f]/50 px-3 py-1.5 rounded-full text-zinc-200 transition-all group"
             >
               <ShoppingBag className="w-4 h-4 text-[#ff2a5f] group-hover:scale-110 transition-transform" />
               <span className="text-xs font-mono font-medium hidden sm:inline">CART</span>
@@ -179,8 +255,11 @@ export default function Navbar({
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-10 h-10 rounded-full bg-[#12121a] border border-[#232333] flex items-center justify-center text-zinc-300 hover:text-white"
+              onClick={() => {
+                playUiClick();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              className="lg:hidden w-9 h-9 rounded-full bg-[#12121a] border border-[#232333] flex items-center justify-center text-zinc-300 hover:text-white"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -190,7 +269,46 @@ export default function Navbar({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-[#1a1a27] bg-[#0d0d14] px-4 pt-3 pb-6 mt-3 animate-fadeIn">
+          <div className="lg:hidden border-t border-[#1a1a27] bg-[#0d0d14] px-4 pt-3 pb-6 mt-3 space-y-3 animate-fadeIn">
+            {/* Mobile Feature Actions */}
+            <div className="grid grid-cols-3 gap-2 pb-2 border-b border-[#1c1c28]">
+              <button
+                onClick={() => {
+                  playUiClick();
+                  setMobileMenuOpen(false);
+                  onOpenLookbook();
+                }}
+                className="p-2 rounded-lg bg-[#141420] border border-[#242436] text-[10px] font-mono text-zinc-300 flex flex-col items-center justify-center space-y-1"
+              >
+                <Camera className="w-3.5 h-3.5 text-[#ff2a5f]" />
+                <span>LOOKBOOK</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  playUiClick();
+                  setMobileMenuOpen(false);
+                  onOpenLoadoutBuilder();
+                }}
+                className="p-2 rounded-lg bg-[#141420] border border-[#242436] text-[10px] font-mono text-zinc-300 flex flex-col items-center justify-center space-y-1"
+              >
+                <Layers className="w-3.5 h-3.5 text-amber-400" />
+                <span>LOADOUT</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  playUiClick();
+                  setMobileMenuOpen(false);
+                  onOpenDropGate();
+                }}
+                className="p-2 rounded-lg bg-[#141420] border border-[#242436] text-[10px] font-mono text-zinc-300 flex flex-col items-center justify-center space-y-1"
+              >
+                <KeyRound className="w-3.5 h-3.5 text-[#00f0ff]" />
+                <span>VAULT GATE</span>
+              </button>
+            </div>
+
             <div className="flex flex-col space-y-2">
               <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest px-3 py-1">
                 Collections // Drop Vol. 04
@@ -199,6 +317,7 @@ export default function Navbar({
                 <button
                   key={cat.value}
                   onClick={() => {
+                    playUiClick();
                     onSelectCategory(cat.value);
                     setMobileMenuOpen(false);
                     const catalogEl = document.getElementById("catalog");

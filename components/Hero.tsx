@@ -1,13 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ArrowDownRight, Flame, ShieldAlert, Sparkles, Layers, Sliders } from "lucide-react";
+import { ArrowDownRight, Flame, Layers, Sliders, Camera, Zap } from "lucide-react";
+import { playUiClick } from "./AudioDeck";
 
 interface HeroProps {
   onOpenFitMatrixGeneral?: () => void;
+  onOpenLookbook?: () => void;
+  onOpenLoadoutBuilder?: () => void;
 }
 
-export default function Hero({ onOpenFitMatrixGeneral }: HeroProps) {
+export default function Hero({
+  onOpenFitMatrixGeneral,
+  onOpenLookbook,
+  onOpenLoadoutBuilder,
+}: HeroProps) {
   // Simulated live drop countdown
   const [timeLeft, setTimeLeft] = useState({
     hours: 38,
@@ -32,6 +39,7 @@ export default function Hero({ onOpenFitMatrixGeneral }: HeroProps) {
   }, []);
 
   const scrollToCatalog = () => {
+    playUiClick();
     const el = document.getElementById("catalog");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
@@ -86,28 +94,57 @@ export default function Hero({ onOpenFitMatrixGeneral }: HeroProps) {
 
             {/* Description */}
             <p className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed">
-              Streetwear built for limited drops. Cut from high-density Japanese loopback cotton, 
+              Streetwear engineered for limited drops. Cut from high-density Japanese loopback cotton, 
               fused with 3D tactile puff prints and light-reactive 3M kanji typography. 
-              Zero blind pre-ordering anxiety with our interactive <strong className="text-white">Fit-Matrix</strong>.
+              Zero blind pre-ordering anxiety with our interactive <strong className="text-white">Fit-Matrix</strong>, <strong className="text-white">Flash Cam</strong>, and <strong className="text-white">Street Lookbook</strong>.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={scrollToCatalog}
-                className="group relative inline-flex items-center justify-center px-7 py-3.5 text-xs font-mono uppercase tracking-widest font-bold text-white bg-[#ff2a5f] hover:bg-[#ff1f58] transition-all rounded-sm shadow-xl shadow-[#ff2a5f]/25 hover:scale-[1.02] active:scale-[0.98]"
+                className="group relative inline-flex items-center justify-center px-6 py-3 text-xs font-mono uppercase tracking-widest font-bold text-white bg-[#ff2a5f] hover:bg-[#ff1f58] transition-all rounded shadow-xl shadow-[#ff2a5f]/25 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span>EXPLORE THE DROP</span>
-                <ArrowDownRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform" />
+                <ArrowDownRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform" />
               </button>
 
               {onOpenFitMatrixGeneral && (
                 <button
-                  onClick={onOpenFitMatrixGeneral}
-                  className="inline-flex items-center justify-center px-6 py-3.5 text-xs font-mono uppercase tracking-widest font-semibold text-zinc-300 hover:text-white bg-[#13131c] hover:bg-[#1a1a26] border border-[#252536] hover:border-[#ff2a5f]/40 transition-all rounded-sm"
+                  onClick={() => {
+                    playUiClick();
+                    onOpenFitMatrixGeneral();
+                  }}
+                  className="inline-flex items-center justify-center px-5 py-3 text-xs font-mono uppercase tracking-widest font-semibold text-zinc-300 hover:text-white bg-[#13131c] hover:bg-[#1a1a26] border border-[#252536] hover:border-[#ff2a5f]/40 transition-all rounded"
                 >
-                  <Sliders className="w-3.5 h-3.5 mr-2 text-[#00f0ff]" />
-                  <span>FIT-MATRIX RADAR</span>
+                  <Sliders className="w-3.5 h-3.5 mr-1.5 text-[#00f0ff]" />
+                  <span>FIT RADAR</span>
+                </button>
+              )}
+
+              {onOpenLookbook && (
+                <button
+                  onClick={() => {
+                    playUiClick();
+                    onOpenLookbook();
+                  }}
+                  className="inline-flex items-center justify-center px-5 py-3 text-xs font-mono uppercase tracking-widest font-semibold text-zinc-300 hover:text-white bg-[#13131c] hover:bg-[#1a1a26] border border-[#252536] hover:border-[#ff2a5f]/40 transition-all rounded"
+                >
+                  <Camera className="w-3.5 h-3.5 mr-1.5 text-[#ff2a5f]" />
+                  <span>LOOKBOOK</span>
+                </button>
+              )}
+
+              {onOpenLoadoutBuilder && (
+                <button
+                  onClick={() => {
+                    playUiClick();
+                    onOpenLoadoutBuilder();
+                  }}
+                  className="inline-flex items-center justify-center px-5 py-3 text-xs font-mono uppercase tracking-widest font-semibold text-zinc-300 hover:text-white bg-[#13131c] hover:bg-[#1a1a26] border border-[#252538] hover:border-amber-400/40 transition-all rounded"
+                >
+                  <Layers className="w-3.5 h-3.5 mr-1.5 text-amber-400" />
+                  <span>BUILD LOADOUT</span>
                 </button>
               )}
             </div>
