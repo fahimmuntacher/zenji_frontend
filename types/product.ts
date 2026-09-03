@@ -28,4 +28,8 @@ export interface ProductItem {
   measurements?: Record<string, MeasurementDetail | undefined>;
   imageFront: string;
   imageBack: string;
+  imageModel?: string;
+  colorway?: string;
+  sku?: string;
+  modelStats?: string;
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ProductItem } from "@/types/product";
 import { useCartStore } from "@/store/useCartStore";
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 import { SITE_CONFIG } from "@/config/site";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
@@ -30,6 +31,9 @@ import {
   Flame,
   BellRing,
   RotateCcw,
+  ChevronDown,
+  User,
+  Info,
 } from "lucide-react";
 
 interface ProductDetailClientProps {
@@ -41,13 +45,20 @@ export default function ProductDetailClient({
   product,
   allProducts,
 }: ProductDetailClientProps) {
-  const [activeImage, setActiveImage] = useState<"front" | "back">("front");
+  const [activeImage, setActiveImage] = useState<"front" | "back" | "model">("front");
   const [selectedSize, setSelectedSize] = useState(product.sizes[0] || "M");
   const [quantity, setQuantity] = useState(1);
   const [flashCam, setFlashCam] = useState(false);
   const [loupeActive, setLoupeActive] = useState(false);
   const [loupePos, setLoupePos] = useState({ x: 50, y: 50 });
   const [isAdded, setIsAdded] = useState(false);
+
+  // Sticky Buy Bar State
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const buyModuleRef = useRef<HTMLDivElement>(null);
+
+  // Accordion State
+  const [openAccordion, setOpenAccordion] = useState<string | null>("spec-1");
 
   // Modals
   const [isFitMatrixOpen, setIsFitMatrixOpen] = useState(false);
@@ -59,11 +70,29 @@ export default function ProductDetailClient({
   const [isVipUnlocked, setIsVipUnlocked] = useState(false);
 
   const { addItem, toggleCartDrawer } = useCartStore();
+  const { formatPrice } = useCurrencyStore();
 
   const isSoldOut = product.stock <= 0;
   const isLowStock = product.stock > 0 && product.stock <= 4;
 
-  const currentImageSrc = activeImage === "front" ? product.imageFront : product.imageBack;
+  const currentImageSrc =
+    activeImage === "front"
+      ? product.imageFront
+      : activeImage === "back"
+      ? product.imageBack
+      : product.imageModel || product.imageFront;
+
+  // Scroll listener for Sticky Buy HUD
+  useEffect(() => {
+    const handleScroll = () => {
+      if (buyModuleRef.current) {
+        const rect = buyModuleRef.current.getBoundingClientRect();
+        setShowStickyBar(rect.bottom < 0);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!loupeActive) return;
@@ -101,12 +130,19 @@ export default function ProductDetailClient({
     }, 1200);
   };
 
+  const toggleAccordionItem = (id: string) => {
+    playUiClick();
+    setOpenAccordion((prev) => (prev === id ? null : id));
+  };
+
   const relatedProducts = allProducts.filter((p) => p.id !== product.id).slice(0, 4);
 
   return (
-    <div className={`min-h-screen flex flex-col font-mono transition-colors duration-500 ${
-      flashCam ? "bg-[#050508] text-zinc-100" : "bg-[#08080b] text-white"
-    }`}>
+    <div
+      className={`min-h-screen flex flex-col font-mono transition-colors duration-500 pb-20 sm:pb-0 ${
+        flashCam ? "bg-[#050508] text-zinc-100" : "bg-[#08080b] text-white"
+      }`}
+    >
       {/* Navigation Header */}
       <Navbar
         activeCategory="All"
@@ -121,24 +157,30 @@ export default function ProductDetailClient({
         isVipUnlocked={isVipUnlocked}
       />
 
-      {/* Breadcrumbs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 w-full text-xs text-zinc-500 flex items-center justify-between">
+      {/* Breadcrumbs & Scarcity Seal */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 w-full text-xs text-zinc-500 flex flex-wrap items-center justify-between gap-3">
         <Link
           href="/"
           className="inline-flex items-center space-x-1.5 text-zinc-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>BACK TO STOREFRONT CATALOG</span>
+          <span>BACK TO CATALOG</span>
         </Link>
-        <span className="hidden sm:inline text-zinc-600">
-          DROP VOL. 04 // ARCHIVE CODE: {product.id.toUpperCase()}
-        </span>
+
+        <div className="flex items-center space-x-3">
+          <span className="bg-[#ff2a5f]/15 border border-[#ff2a5f]/40 text-[#ff2a5f] text-[10px] font-bold px-2.5 py-0.5 rounded tracking-widest uppercase animate-pulse">
+            NO RESTOCKS. EVER.
+          </span>
+          <span className="hidden sm:inline text-zinc-600">
+            {product.sku || product.id.toUpperCase()}
+          </span>
+        </div>
       </div>
 
       {/* Main Product Layout: 2 Columns */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Left Column: Gallery & Micro-Loupe */}
+          {/* Left Column: 3-Angle Showcase, Flash Cam & Micro-Loupe */}
           <div className="lg:col-span-7 space-y-4">
             {/* Primary Visual Showcase */}
             <div
@@ -192,7 +234,7 @@ export default function ProductDetailClient({
                 </div>
               )}
 
-              {/* Floating Interactive Badges on Image */}
+              {/* Floating Badges */}
               <div className="absolute top-4 left-4 flex flex-col space-y-2 z-20">
                 <span className="bg-[#08080c]/90 backdrop-blur-md px-3 py-1 rounded text-xs text-white border border-[#27273a]">
                   {product.japaneseTitle}
@@ -237,53 +279,81 @@ export default function ProductDetailClient({
                 </button>
               </div>
 
-              {/* Bottom Spec Badge */}
-              <div className="absolute bottom-4 left-4 right-4 z-20">
-                <span className="bg-black/85 backdrop-blur-md px-3 py-1.5 rounded text-xs text-zinc-300 border border-[#2b2b3d]">
-                  {product.gsmRating} · {product.fitType}
-                </span>
-              </div>
+              {/* On Model Stats HUD */}
+              {activeImage === "model" && product.modelStats && (
+                <div className="absolute bottom-4 left-4 right-4 z-20 bg-black/85 backdrop-blur-md px-3 py-2 rounded-lg border border-[#00f0ff]/40 flex items-center space-x-2 text-xs text-[#00f0ff]">
+                  <User className="w-3.5 h-3.5" />
+                  <span>{product.modelStats}</span>
+                </div>
+              )}
             </div>
 
-            {/* Thumbnail Switcher */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* 3-Angle Editorial Photography Switcher */}
+            <div className="grid grid-cols-3 gap-3">
+              {/* Front Profile */}
               <button
                 onClick={() => {
                   playUiClick();
                   setActiveImage("front");
                 }}
-                className={`p-2 rounded-xl border flex items-center space-x-3 transition-all ${
+                className={`p-2.5 rounded-xl border flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 transition-all ${
                   activeImage === "front"
                     ? "bg-[#141422] border-[#ff2a5f] shadow-md shadow-[#ff2a5f]/20"
                     : "bg-[#101017] border-[#222232] text-zinc-400 hover:text-white"
                 }`}
               >
-                <div className="w-12 h-14 rounded overflow-hidden bg-black shrink-0 border border-[#272738]">
+                <div className="w-10 h-12 rounded overflow-hidden bg-black shrink-0 border border-[#272738]">
                   <img src={product.imageFront} alt="Front View" className="w-full h-full object-cover" />
                 </div>
                 <div className="text-left text-xs">
-                  <div className="font-bold text-white">FRONT PROFILE</div>
-                  <div className="text-[10px] text-zinc-500">Chest Graphics & Collar</div>
+                  <div className="font-bold text-white text-[11px]">FRONT</div>
+                  <div className="text-[9px] text-zinc-500 hidden sm:block">Chest Graphics</div>
                 </div>
               </button>
 
+              {/* Back / Spine */}
               <button
                 onClick={() => {
                   playUiClick();
                   setActiveImage("back");
                 }}
-                className={`p-2 rounded-xl border flex items-center space-x-3 transition-all ${
+                className={`p-2.5 rounded-xl border flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 transition-all ${
                   activeImage === "back"
                     ? "bg-[#141422] border-[#ff2a5f] shadow-md shadow-[#ff2a5f]/20"
                     : "bg-[#101017] border-[#222232] text-zinc-400 hover:text-white"
                 }`}
               >
-                <div className="w-12 h-14 rounded overflow-hidden bg-black shrink-0 border border-[#272738]">
+                <div className="w-10 h-12 rounded overflow-hidden bg-black shrink-0 border border-[#272738]">
                   <img src={product.imageBack} alt="Back View" className="w-full h-full object-cover" />
                 </div>
                 <div className="text-left text-xs">
-                  <div className="font-bold text-white">BACK / SPINE ANGLE</div>
-                  <div className="text-[10px] text-zinc-500">Full Schematics & Hood</div>
+                  <div className="font-bold text-white text-[11px]">SPINE / REAR</div>
+                  <div className="text-[9px] text-zinc-500 hidden sm:block">Full Schematics</div>
+                </div>
+              </button>
+
+              {/* On Model Fit */}
+              <button
+                onClick={() => {
+                  playUiClick();
+                  setActiveImage("model");
+                }}
+                className={`p-2.5 rounded-xl border flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 transition-all ${
+                  activeImage === "model"
+                    ? "bg-[#141422] border-[#00f0ff] shadow-md shadow-[#00f0ff]/20"
+                    : "bg-[#101017] border-[#222232] text-zinc-400 hover:text-white"
+                }`}
+              >
+                <div className="w-10 h-12 rounded overflow-hidden bg-black shrink-0 border border-[#272738]">
+                  <img
+                    src={product.imageModel || product.imageFront}
+                    alt="On Model View"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="text-left text-xs">
+                  <div className="font-bold text-white text-[11px]">ON-MODEL FIT</div>
+                  <div className="text-[9px] text-zinc-500 hidden sm:block">Real Proportion</div>
                 </div>
               </button>
             </div>
@@ -292,7 +362,7 @@ export default function ProductDetailClient({
           {/* Right Column: Specifications, Sizing & Actions */}
           <div className="lg:col-span-5 space-y-6">
             {/* Header / Title */}
-            <div className="space-y-2 border-b border-[#1c1c2b] pb-5">
+            <div className="space-y-2 border-b border-[#1c1c2b] pb-5" ref={buyModuleRef}>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#ff2a5f] font-bold tracking-widest uppercase">
                   DROP VOL. 04 // {product.category}
@@ -316,17 +386,27 @@ export default function ProductDetailClient({
                 {product.name}
               </h1>
 
-              <div className="flex items-baseline space-x-3 pt-1">
+              {/* Colorway & SKU Telemetry Badge */}
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-[10px] font-mono text-zinc-400">
+                <span className="bg-[#141420] border border-[#242436] px-2 py-0.5 rounded text-white font-bold">
+                  COLORWAY: {product.colorway || "OBSIDIAN"}
+                </span>
+                <span className="text-zinc-600">//</span>
+                <span className="text-zinc-500">SKU: {product.sku || product.id.toUpperCase()}</span>
+              </div>
+
+              {/* Price & Shipping */}
+              <div className="flex items-baseline space-x-3 pt-2">
                 <span className="text-3xl font-black text-[#ff2a5f]">
-                  ${product.price} <span className="text-xs text-zinc-500 font-normal">USD</span>
+                  {formatPrice(isVipUnlocked ? Math.round(product.price * 0.8) : product.price)}
                 </span>
                 <span className="text-xs text-zinc-400 font-sans">
-                  Free international express shipping on orders $100+
+                  Free DHL express delivery on orders over $100
                 </span>
               </div>
             </div>
 
-            {/* Lore Description */}
+            {/* Description */}
             <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed">
               {product.description}
             </p>
@@ -410,7 +490,7 @@ export default function ProductDetailClient({
                       className="w-full py-3 px-4 bg-red-950/80 hover:bg-red-900 border border-red-800 text-red-200 text-xs font-bold uppercase rounded-xl flex items-center justify-center space-x-2 transition-colors"
                     >
                       <BellRing className="w-4 h-4 text-red-400" />
-                      <span>LOCK IN RE-SUPPLY RADAR</span>
+                      <span>JOIN RE-SUPPLY RADAR</span>
                     </button>
                   ) : (
                     <button
@@ -429,7 +509,7 @@ export default function ProductDetailClient({
                       ) : (
                         <>
                           <ShoppingBag className="w-4 h-4" />
-                          <span>SECURE DROP PIECE (${product.price * quantity})</span>
+                          <span>SECURE PIECE ({formatPrice(product.price * quantity)})</span>
                         </>
                       )}
                     </button>
@@ -438,46 +518,151 @@ export default function ProductDetailClient({
               </div>
             </div>
 
-            {/* Technical Specifications Specs Grid */}
-            <div className="bg-[#101018] border border-[#202030] rounded-xl p-4 space-y-3 text-xs">
-              <div className="text-zinc-400 font-bold tracking-wider uppercase border-b border-[#1b1b2a] pb-2">
-                FABRIC & PRINT SPECIFICATIONS
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-[11px]">
-                <div>
-                  <span className="text-zinc-500 block">FABRIC MASS:</span>
-                  <span className="text-white font-bold">{product.gsmRating}</span>
-                </div>
-                <div>
-                  <span className="text-zinc-500 block">PRINT METHOD:</span>
-                  <span className="text-[#00f0ff] font-bold">{product.printType}</span>
-                </div>
-                <div>
-                  <span className="text-zinc-500 block">CUT SILHOUETTE:</span>
-                  <span className="text-white font-bold">{product.fitType}</span>
-                </div>
-                <div>
-                  <span className="text-zinc-500 block">DISPATCH ORIGIN:</span>
-                  <span className="text-white font-bold">Shibuya, Tokyo</span>
-                </div>
+            {/* Animated Technical Accordions */}
+            <div className="border-t border-[#1c1c2b] pt-4 space-y-2.5">
+              {/* Accordion 1: Textile Weave & GSM */}
+              <div className="border border-[#222234] rounded-xl overflow-hidden bg-[#0d0d14]">
+                <button
+                  onClick={() => toggleAccordionItem("spec-1")}
+                  className="w-full p-3.5 flex items-center justify-between text-left text-xs font-bold text-white hover:bg-[#12121c] transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#00f0ff]">SPEC 01 //</span>
+                    <span>TEXTILE WEAVE & {product.gsmRating} MASS</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-zinc-400 transition-transform ${
+                      openAccordion === "spec-1" ? "rotate-180 text-[#ff2a5f]" : ""
+                    }`}
+                  />
+                </button>
+                {openAccordion === "spec-1" && (
+                  <div className="p-4 pt-1 text-xs text-zinc-300 font-sans space-y-2 border-t border-[#1c1c28]">
+                    <p>
+                      Milled from 100% compact ring-spun Japanese cotton with dual loopback terry loops.
+                      Maintains rigid structural drape while remaining breathable across seasonal temperature shifts.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 font-mono text-[11px] pt-1">
+                      <div><span className="text-zinc-500">GSM MASS:</span> {product.gsmRating}</div>
+                      <div><span className="text-zinc-500">SILHOUETTE:</span> {product.fitType}</div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {product.printDetails && (
-                <p className="text-[11px] text-zinc-400 font-sans pt-1 border-t border-[#1a1a28]">
-                  {product.printDetails}
-                </p>
-              )}
-            </div>
-
-            {/* Trust Assurances */}
-            <div className="grid grid-cols-2 gap-3 text-[11px] text-zinc-400">
-              <div className="flex items-center space-x-2 bg-[#12121b] border border-[#20202e] p-2.5 rounded-lg">
-                <Truck className="w-4 h-4 text-[#00f0ff] shrink-0" />
-                <span>DHL Express 2-4 Day Dispatch</span>
+              {/* Accordion 2: 3D Puff & 3M Ink */}
+              <div className="border border-[#222234] rounded-xl overflow-hidden bg-[#0d0d14]">
+                <button
+                  onClick={() => toggleAccordionItem("spec-2")}
+                  className="w-full p-3.5 flex items-center justify-between text-left text-xs font-bold text-white hover:bg-[#12121c] transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[#ff2a5f]">SPEC 02 //</span>
+                    <span>{product.printType.toUpperCase()}</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-zinc-400 transition-transform ${
+                      openAccordion === "spec-2" ? "rotate-180 text-[#ff2a5f]" : ""
+                    }`}
+                  />
+                </button>
+                {openAccordion === "spec-2" && (
+                  <div className="p-4 pt-1 text-xs text-zinc-300 font-sans space-y-2 border-t border-[#1c1c28]">
+                    <p>{product.printDetails}</p>
+                    <p className="text-[11px] text-[#00f0ff] font-mono">
+                      ● 3M Scotchlite Retro-Reflective Emulsion (450 cd/lux reflection under direct headlights/flash).
+                    </p>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center space-x-2 bg-[#12121b] border border-[#20202e] p-2.5 rounded-lg">
-                <RotateCcw className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>14-Day Global Returns Policy</span>
+
+              {/* Accordion 3: Community Fit Sentiment */}
+              <div className="border border-[#222234] rounded-xl overflow-hidden bg-[#0d0d14]">
+                <button
+                  onClick={() => toggleAccordionItem("spec-3")}
+                  className="w-full p-3.5 flex items-center justify-between text-left text-xs font-bold text-white hover:bg-[#12121c] transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-amber-400">SPEC 03 //</span>
+                    <span>COMMUNITY FIT SENTIMENT & SIZING</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-zinc-400 transition-transform ${
+                      openAccordion === "spec-3" ? "rotate-180 text-[#ff2a5f]" : ""
+                    }`}
+                  />
+                </button>
+                {openAccordion === "spec-3" && (
+                  <div className="p-4 pt-1 text-xs text-zinc-300 font-sans space-y-3 border-t border-[#1c1c28]">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-xs font-mono">
+                        <span className="text-zinc-400">COMMUNITY VERDICT:</span>
+                        <span className="text-emerald-400 font-bold">94% TRUE TO OVERSIZED</span>
+                      </div>
+                      <div className="w-full bg-[#1b1b2a] h-2 rounded-full overflow-hidden flex">
+                        <div className="bg-emerald-500 h-full w-[94%]" />
+                        <div className="bg-amber-500 h-full w-[6%]" />
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-zinc-400">
+                      If you prefer a tailored fit, choose one size down. For the authentic Shibuya drop-shoulder aesthetic, select your standard size.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 4: Shipping & Dispatch */}
+              <div className="border border-[#222234] rounded-xl overflow-hidden bg-[#0d0d14]">
+                <button
+                  onClick={() => toggleAccordionItem("spec-4")}
+                  className="w-full p-3.5 flex items-center justify-between text-left text-xs font-bold text-white hover:bg-[#12121c] transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-emerald-400">SPEC 04 //</span>
+                    <span>TOKYO DISPATCH & DHL EXPRESS (2-4 DAYS)</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-zinc-400 transition-transform ${
+                      openAccordion === "spec-4" ? "rotate-180 text-[#ff2a5f]" : ""
+                    }`}
+                  />
+                </button>
+                {openAccordion === "spec-4" && (
+                  <div className="p-4 pt-1 text-xs text-zinc-300 font-sans space-y-2 border-t border-[#1c1c28]">
+                    <p>
+                      Direct worldwide dispatch from our Shibuya fulfillment hub. All orders packed in custom vacuum-sealed anti-static mylar bags with cryptographic hologram seals.
+                    </p>
+                    <p className="text-[11px] text-zinc-400">
+                      • 14-Day Global Return Window for unworn pieces with original tags intact.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 5: Garment Care Protocol */}
+              <div className="border border-[#222234] rounded-xl overflow-hidden bg-[#0d0d14]">
+                <button
+                  onClick={() => toggleAccordionItem("spec-5")}
+                  className="w-full p-3.5 flex items-center justify-between text-left text-xs font-bold text-white hover:bg-[#12121c] transition-colors"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="text-purple-400">SPEC 05 //</span>
+                    <span>GARMENT CARE PROTOCOL</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-zinc-400 transition-transform ${
+                      openAccordion === "spec-5" ? "rotate-180 text-[#ff2a5f]" : ""
+                    }`}
+                  />
+                </button>
+                {openAccordion === "spec-5" && (
+                  <div className="p-4 pt-1 text-xs text-zinc-300 font-sans space-y-1.5 border-t border-[#1c1c28] text-[11px]">
+                    <div>• Machine wash cold (30°C) inside-out with like colors.</div>
+                    <div>• Line dry in shade to preserve silicone puff volume.</div>
+                    <div>• Do NOT iron directly over 3D puff graphics or 3M tape.</div>
+                    <div>• Do not bleach or dry clean.</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -498,7 +683,7 @@ export default function ProductDetailClient({
               href="/#catalog"
               className="text-xs text-zinc-400 hover:text-white transition-colors"
             >
-              VIEW ALL 8 PIECES ❯
+              VIEW ALL PIECES ❯
             </Link>
           </div>
 
@@ -523,13 +708,76 @@ export default function ProductDetailClient({
                   <h4 className="text-xs font-bold text-white group-hover:text-[#ff2a5f] transition-colors truncate">
                     {rel.name}
                   </h4>
-                  <div className="text-[11px] text-zinc-400">${rel.price} USD</div>
+                  <div className="text-[11px] text-zinc-400">{formatPrice(rel.price)}</div>
                 </div>
               </Link>
             ))}
           </div>
         </div>
       </main>
+
+      {/* Luxury Sticky Bottom Quick-Buy HUD Bar */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-40 bg-[#0c0c14]/95 backdrop-blur-md border-t border-[#222234] py-3 px-4 transition-transform duration-300 shadow-2xl ${
+          showStickyBar ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg overflow-hidden bg-black border border-[#27273a] shrink-0">
+              <img src={product.imageFront} alt={product.name} className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white font-mono truncate max-w-[200px] sm:max-w-xs">
+                {product.name}
+              </h4>
+              <div className="text-[11px] text-[#ff2a5f] font-mono font-bold">
+                {formatPrice(product.price)}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            {/* Quick Size Pills */}
+            <div className="hidden sm:flex items-center space-x-1">
+              {product.sizes.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => {
+                    playUiClick();
+                    setSelectedSize(s);
+                  }}
+                  className={`px-2 py-1 rounded text-[10px] font-mono font-bold ${
+                    selectedSize === s
+                      ? "bg-[#ff2a5f] text-white"
+                      : "bg-[#181826] text-zinc-400 hover:text-white"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+
+            {/* Quick Add Button */}
+            {isSoldOut ? (
+              <button
+                onClick={() => setIsResupplyOpen(true)}
+                className="px-4 py-2 bg-red-950 text-red-300 border border-red-800 text-xs font-bold rounded-lg uppercase font-mono"
+              >
+                JOIN RADAR
+              </button>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                className="px-5 py-2.5 bg-[#ff2a5f] hover:bg-[#ff1f58] text-white text-xs font-bold rounded-lg uppercase tracking-wider font-mono shadow-lg shadow-[#ff2a5f]/25 flex items-center space-x-1.5 transition-all"
+              >
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span>{isAdded ? "ADDED" : "SECURE PIECE"}</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
 
       {/* Modals */}
       <FitMatrixModal
@@ -542,15 +790,6 @@ export default function ProductDetailClient({
         product={product}
         isOpen={isResupplyOpen}
         onClose={() => setIsResupplyOpen(false)}
-      />
-
-      <CartDrawer
-        onProceedToCheckout={() => setIsCheckoutOpen(true)}
-      />
-
-      <CheckoutModal
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
       />
 
       <LookbookModal
@@ -572,6 +811,13 @@ export default function ProductDetailClient({
         onClose={() => setIsDropGateOpen(false)}
         onUnlocked={() => setIsVipUnlocked(true)}
         isUnlocked={isVipUnlocked}
+      />
+
+      <CartDrawer onProceedToCheckout={() => setIsCheckoutOpen(true)} />
+
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
       />
 
       <AudioDeck />

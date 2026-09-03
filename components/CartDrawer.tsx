@@ -2,15 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 import { SITE_CONFIG } from "@/config/site";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Sparkles, Truck } from "lucide-react";
 
 interface CartDrawerProps {
-  onProceedToCheckout: () => void;
+  onProceedToCheckout?: () => void;
 }
 
-export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
+export default function CartDrawer({ onProceedToCheckout = () => {} }: CartDrawerProps) {
   const {
     items,
     isOpen,
@@ -22,6 +23,7 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
   } = useCartStore();
 
   const [mounted, setMounted] = useState(false);
+  const { formatPrice } = useCurrencyStore();
 
   useEffect(() => {
     setMounted(true);
@@ -95,12 +97,12 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
                 <span className="text-[#00f0ff] font-bold">FREE EXPRESS SHIPPING UNLOCKED!</span>
               ) : (
                 <span>
-                  ADD <strong className="text-[#ff2a5f]">${amountNeeded.toFixed(2)}</strong> FOR FREE SHIPPING
+                  ADD <strong className="text-[#ff2a5f]">{formatPrice(amountNeeded)}</strong> FOR FREE SHIPPING
                 </span>
               )}
             </span>
             <span className="text-[10px] text-zinc-500 font-mono">
-              ${currentSubtotal.toFixed(0)} / ${shippingThreshold}
+              {formatPrice(currentSubtotal)} / {formatPrice(shippingThreshold)}
             </span>
           </div>
 
@@ -203,10 +205,10 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
 
                     <div className="text-right">
                       <div className="text-xs font-mono font-bold text-white">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatPrice(item.price * item.quantity)}
                       </div>
                       <div className="text-[10px] font-mono text-zinc-500">
-                        ${item.price} each
+                        {formatPrice(item.price)} each
                       </div>
                     </div>
                   </div>
@@ -222,12 +224,12 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
             <div className="space-y-1.5 text-xs font-mono">
               <div className="flex justify-between text-zinc-400">
                 <span>SUBTOTAL</span>
-                <span className="text-white font-semibold">${currentSubtotal.toFixed(2)} USD</span>
+                <span className="text-white font-semibold">{formatPrice(currentSubtotal)}</span>
               </div>
               <div className="flex justify-between text-zinc-400">
                 <span>ESTIMATED SHIPPING</span>
                 <span className={isFreeShipping ? "text-[#00f0ff] font-bold" : "text-white"}>
-                  {isFreeShipping ? "FREE EXPRESS" : "$14.00 USD"}
+                  {isFreeShipping ? "FREE EXPRESS" : formatPrice(SITE_CONFIG.standardShippingFee)}
                 </span>
               </div>
               <div className="flex justify-between text-zinc-400">
@@ -237,7 +239,7 @@ export default function CartDrawer({ onProceedToCheckout }: CartDrawerProps) {
               <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-[#1f1f2e]">
                 <span>TOTAL</span>
                 <span className="text-[#ff2a5f] font-mono">
-                  ${(currentSubtotal + (isFreeShipping ? 0 : 14)).toFixed(2)} USD
+                  {formatPrice(currentSubtotal + (isFreeShipping ? 0 : SITE_CONFIG.standardShippingFee))}
                 </span>
               </div>
             </div>

@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { ProductItem } from "@/types/product";
 import { useCartStore } from "@/store/useCartStore";
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 import { ShoppingBag, Sliders, Sparkles, Zap, Eye, Check, BellRing, ZoomIn } from "lucide-react";
 import { playUiClick, playSuccessChime } from "@/lib/audio";
 
@@ -29,6 +30,7 @@ export default function ProductCard({
 
   const cardImageRef = useRef<HTMLDivElement>(null);
   const { addItem } = useCartStore();
+  const { formatPrice } = useCurrencyStore();
 
   const isFlashActive = globalFlashCam || localFlashCam;
   const isSoldOut = product.stock <= 0;
@@ -249,7 +251,7 @@ export default function ProductCard({
               {product.category} // {product.fitType}
             </span>
             <span className="text-sm font-black font-mono text-white">
-              ${product.price} <span className="text-[10px] text-zinc-500 font-normal">USD</span>
+              {formatPrice(product.price)}
             </span>
           </div>
 

@@ -11,6 +11,9 @@
     "fitType": "Tokyo Cyber Drop Shoulder",
     "stock": 4,
     "featured": true,
+    "colorway": "OBSIDIAN / NEON CYAN",
+    "sku": "ZNJ-2099-001",
+    "modelStats": "Model is 182cm (5'11\") · 74kg wearing Size L",
     "description": "Engineered with 450 GSM Japanese custom loopback French terry. Features high-rise dense puff graphics across the spine and glow-in-the-dark cyber glyphs on the oversized double-layered hood.",
     "printDetails": "High-viscosity silicone puff print cured at 160°C for permanent 3D tactile elevation. Will not crack over repeated washes.",
     "measurements": {
@@ -21,7 +24,8 @@
       "XXL": { "chest": "142cm", "length": "76cm", "shoulder": "66cm" }
     },
     "imageFront": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-02",
@@ -35,6 +39,9 @@
     "fitType": "Boxy Oversized Fit",
     "stock": 7,
     "featured": true,
+    "colorway": "STEEL BLUE / ACID WASH",
+    "sku": "ZNJ-KAIJU-002",
+    "modelStats": "Model is 177cm (5'10\") · 68kg wearing Size M",
     "description": "Crafted from single-origin 280 GSM compact combed yarn. Vintage wash garment-dyed treatment with 3M reflective kanji flanking the left ribcage and kaiju battle schematic on the rear.",
     "printDetails": "Super-soft discharge ink penetrated directly into fiber grain paired with 3M Scotchlite reflective transfer tape.",
     "measurements": {
@@ -44,7 +51,8 @@
       "XL": { "chest": "130cm", "length": "77cm", "shoulder": "60cm" }
     },
     "imageFront": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-03",
@@ -58,6 +66,9 @@
     "fitType": "Tokyo Cyber Drop Shoulder",
     "stock": 2,
     "featured": true,
+    "colorway": "MATTE MILITARY NOIR",
+    "sku": "ZNJ-GHOST-003",
+    "modelStats": "Model is 185cm (6'1\") · 84kg wearing Size XL",
     "description": "Military-spec flight jacket engineered with DWR water-repellent Cordura ripstop. Features custom magnetic Fidlock chest buckle, reversible neon hazard lining, and detachable embroidered talisman ribbons.",
     "printDetails": "Precision CO2 laser engraving on industrial nylon webbing with 80,000-stitch high-density metallic thread embroidery.",
     "measurements": {
@@ -66,7 +77,8 @@
       "XL": { "chest": "138cm", "length": "73cm", "shoulder": "60cm" }
     },
     "imageFront": "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1506634572416-48cdfe530110?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-04",
@@ -80,6 +92,9 @@
     "fitType": "Boxy Oversized Fit",
     "stock": 5,
     "featured": false,
+    "colorway": "EVA PURPLE / ACID GREEN",
+    "sku": "ZNJ-EVANGEL-004",
+    "modelStats": "Model is 180cm (5'11\") · 72kg wearing Size L",
     "description": "Deep purple and obsidian colorway inspired by legendary biomechanical units. 420 GSM ultra-heavyweight brushed interior with reinforced thumbholes on the ribbed cuffs and dropped shoulder drape.",
     "printDetails": "Precision Tatami-stitch kanji embroidery with silver core light-reactive thread that blazes under camera flash.",
     "measurements": {
@@ -90,7 +105,8 @@
       "XXL": { "chest": "144cm", "length": "77cm", "shoulder": "67cm" }
     },
     "imageFront": "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-05",
@@ -104,6 +120,9 @@
     "fitType": "Regular Street Fit",
     "stock": 11,
     "featured": false,
+    "colorway": "CHARCOAL MINERAL WASH",
+    "sku": "ZNJ-AKIRA-005",
+    "modelStats": "Model is 175cm (5'9\") · 65kg wearing Size M",
     "description": "Hand-treated mineral wash giving each piece a 1-of-1 dystopian patina. Hand-distressed ribbed neckline with raw edge hem accents and distress cracked typography.",
     "printDetails": "Formulated with crackle additive that creates intentional micro-fissures resembling weathered cybernetic armor plating.",
     "measurements": {
@@ -113,7 +132,8 @@
       "XL": { "chest": "126cm", "length": "76cm", "shoulder": "57cm" }
     },
     "imageFront": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1492447273231-0f8fecec1e3a?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-06",
@@ -127,6 +147,9 @@
     "fitType": "Tokyo Cyber Drop Shoulder",
     "stock": 3,
     "featured": false,
+    "colorway": "STEALTH GRAPHITE",
+    "sku": "ZNJ-RONIN-006",
+    "modelStats": "Model is 183cm (6'0\") · 78kg wearing Size L",
     "description": "Weatherproof technical shell with convertible zip-off sleeves. Converts seamlessly from an oversized drop-shoulder anorak to a tactical cyber utility vest in seconds.",
     "printDetails": "Silkscreened microscopic retro-reflective glass bead matrix displaying coordinate grids under ambient streetlights.",
     "measurements": {
@@ -136,7 +159,8 @@
       "XL": { "chest": "138cm", "length": "76cm", "shoulder": "60cm" }
     },
     "imageFront": "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1544441892-794166f1e3be?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1544441892-794166f1e3be?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-07",
@@ -150,13 +174,17 @@
     "fitType": "Regular Street Fit",
     "stock": 9,
     "featured": false,
+    "colorway": "MIDNIGHT ONYX",
+    "sku": "ZNJ-CAP-007",
+    "modelStats": "Unisex One-Size Adjustable Strap (54–62cm)",
     "description": "Structured 6-panel low profile dad cap with matte gunmetal zinc alloy buckle closure. Features rubberized high-relief Japanese Zenji insignia on the visor and side ear-loop webbing.",
     "printDetails": "Cast matte zinc alloy emblem with laser-engraved serial code 'ZENJI-2026-DROP04'.",
     "measurements": {
       "OS": { "chest": "Adjustable", "length": "54-62cm", "shoulder": "Universal" }
     },
     "imageFront": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80"
   },
   {
     "id": "zenji-08",
@@ -170,12 +198,16 @@
     "fitType": "Tokyo Cyber Drop Shoulder",
     "stock": 0,
     "featured": false,
+    "colorway": "BALLISTIC BLACKOUT",
+    "sku": "ZNJ-BAG-008",
+    "modelStats": "Adjustable harness strap with magnetic Fidlock release",
     "description": "Indestructible 1000D Cordura crossbody bag with Fidlock V-buckle fast release. Waterproof YKK AquaGuard zipper closures with internal compartments for tablets, keys, and cyber EDC gear.",
     "printDetails": "Heavy industrial heat-stamped typography on high-tensile seatbelt grade nylon harness strapping.",
     "measurements": {
       "OS": { "chest": "3.5 Liters", "length": "28x18x8cm", "shoulder": "Adjustable Strap" }
     },
     "imageFront": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80",
-    "imageBack": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=80"
+    "imageBack": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=80",
+    "imageModel": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1000&q=80"
   }
 ]

@@ -5,33 +5,34 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { ShoppingBag, Search, X, Menu, ShieldCheck, Camera, Layers, KeyRound, Zap } from "lucide-react";
 import { useCartStore } from "@/store/useCartStore";
+import { useCurrencyStore, CURRENCY_CONFIG, CurrencyCode } from "@/store/useCurrencyStore";
 import { SITE_CONFIG } from "@/config/site";
 import { playUiClick } from "@/lib/audio";
 
 interface NavbarProps {
-  activeCategory: string;
-  onSelectCategory: (category: string) => void;
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  onOpenLookbook: () => void;
-  onOpenLoadoutBuilder: () => void;
-  onOpenDropGate: () => void;
-  globalFlashCam: boolean;
-  onToggleGlobalFlashCam: () => void;
-  isVipUnlocked: boolean;
+  activeCategory?: string;
+  onSelectCategory?: (category: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
+  onOpenLookbook?: () => void;
+  onOpenLoadoutBuilder?: () => void;
+  onOpenDropGate?: () => void;
+  globalFlashCam?: boolean;
+  onToggleGlobalFlashCam?: () => void;
+  isVipUnlocked?: boolean;
 }
 
 export default function Navbar({
-  activeCategory,
-  onSelectCategory,
-  searchQuery,
-  onSearchChange,
-  onOpenLookbook,
-  onOpenLoadoutBuilder,
-  onOpenDropGate,
-  globalFlashCam,
-  onToggleGlobalFlashCam,
-  isVipUnlocked,
+  activeCategory = "All",
+  onSelectCategory = () => {},
+  searchQuery = "",
+  onSearchChange = () => {},
+  onOpenLookbook = () => {},
+  onOpenLoadoutBuilder = () => {},
+  onOpenDropGate = () => {},
+  globalFlashCam = false,
+  onToggleGlobalFlashCam = () => {},
+  isVipUnlocked = false,
 }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -44,6 +45,7 @@ export default function Navbar({
   const [mounted, setMounted] = useState(false);
 
   const { toggleCartDrawer, totalItems } = useCartStore();
+  const { currency, setCurrency } = useCurrencyStore();
 
   useEffect(() => {
     setMounted(true);
@@ -59,9 +61,9 @@ export default function Navbar({
   }, [searchQuery]);
 
   const categories = [
-    { label: "ALL PIECES", value: "All" },
+    { label: "ALL", value: "All" },
     { label: "HOODIES", value: "Hoodies" },
-    { label: "OVERSIZED TEES", value: "Tees" },
+    { label: "TEES", value: "Tees" },
     { label: "OUTERWEAR", value: "Outerwear" },
     { label: "ACCESSORIES", value: "Accessories" },
   ];
@@ -117,7 +119,26 @@ export default function Navbar({
             <span className="text-zinc-400 hidden md:inline">FREE EXPRESS SHIPPING OVER $100</span>
           </div>
 
-          <div className="flex items-center space-x-4 text-[10px]">
+          <div className="flex items-center space-x-3 text-[10px]">
+            {/* Multi-Currency Dropdown */}
+            <div className="flex items-center bg-[#13131c] border border-[#252538] rounded px-1.5 py-0.5">
+              <select
+                value={currency}
+                onChange={(e) => {
+                  playUiClick();
+                  setCurrency(e.target.value as CurrencyCode);
+                }}
+                className="bg-transparent text-white font-mono text-[10px] cursor-pointer focus:outline-none"
+                aria-label="Select Currency"
+              >
+                {Object.values(CURRENCY_CONFIG).map((c) => (
+                  <option key={c.code} value={c.code} className="bg-[#101018] text-white">
+                    {c.flag} {c.code}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {isVipUnlocked ? (
               <span className="text-emerald-400 font-bold flex items-center">
                 <KeyRound className="w-3 h-3 mr-1" />
@@ -150,17 +171,17 @@ export default function Navbar({
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Logo - Route aware Link to Home */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 shrink-0">
             <Link
               href="/"
               onClick={handleLogoClick}
               className="flex items-center space-x-2 group text-left"
             >
-              <div className="w-9 h-9 bg-gradient-to-br from-[#ff2a5f] to-[#791530] rounded-sm flex items-center justify-center font-bold text-white shadow-lg shadow-[#ff2a5f]/20 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 bg-gradient-to-br from-[#ff2a5f] to-[#791530] rounded-sm flex items-center justify-center font-bold text-white shadow-lg shadow-[#ff2a5f]/20 group-hover:scale-105 transition-transform shrink-0">
                 <span className="font-mono text-base tracking-tighter">禅</span>
               </div>
               <div>
-                <div className="flex items-center space-x-1.5">
+                <div className="flex items-center space-x-1.5 whitespace-nowrap">
                   <span className="font-black text-xl tracking-[0.2em] text-white">
                     ZENJI
                   </span>
@@ -168,7 +189,7 @@ export default function Navbar({
                     禅路
                   </span>
                 </div>
-                <p className="text-[9px] tracking-widest text-zinc-500 uppercase font-mono">
+                <p className="text-[9px] tracking-widest text-zinc-500 uppercase font-mono whitespace-nowrap">
                   Cyberpunk Streetwear
                 </p>
               </div>
@@ -176,14 +197,14 @@ export default function Navbar({
           </div>
 
           {/* Desktop Categories - Route aware navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 bg-[#101017]/80 border border-[#1f1f2e] p-1 rounded-full">
+          <nav className="hidden lg:flex items-center space-x-1 bg-[#101017]/80 border border-[#1f1f2e] p-1 rounded-full shrink-0 whitespace-nowrap">
             {categories.map((cat) => {
               const active = isHomePage && activeCategory === cat.value;
               return (
                 <button
                   key={cat.value}
                   onClick={() => handleCategoryClick(cat.value)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wider transition-all duration-200 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wider whitespace-nowrap transition-all duration-200 ${
                     active
                       ? "bg-[#ff2a5f] text-white shadow-md shadow-[#ff2a5f]/25 font-semibold"
                       : "text-zinc-400 hover:text-white hover:bg-zinc-800/40"
@@ -193,17 +214,28 @@ export default function Navbar({
                 </button>
               );
             })}
+            <Link
+              href="/our-story"
+              onClick={() => playUiClick()}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wider whitespace-nowrap transition-all duration-200 ${
+                pathname === "/our-story"
+                  ? "bg-[#ff2a5f] text-white shadow-md shadow-[#ff2a5f]/25 font-semibold"
+                  : "text-zinc-400 hover:text-white hover:bg-zinc-800/40"
+              }`}
+            >
+              OUR STORY
+            </Link>
           </nav>
 
           {/* Right Actions: Flash Cam, Search, Lookbook, Loadout & Cart */}
-          <div className="flex items-center space-x-2 sm:space-x-2.5">
+          <div className="flex items-center space-x-2 sm:space-x-2.5 shrink-0 whitespace-nowrap">
             {/* 3M Flash Cam Quick Toggle */}
             <button
               onClick={() => {
                 playUiClick();
                 onToggleGlobalFlashCam();
               }}
-              className={`hidden md:flex items-center space-x-1 px-3 py-1.5 rounded-full border text-xs font-mono transition-all ${
+              className={`hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-full border text-xs font-mono whitespace-nowrap shrink-0 transition-all ${
                 globalFlashCam
                   ? "bg-[#00f0ff] text-black font-bold border-[#00f0ff] shadow-md shadow-[#00f0ff]/30"
                   : "bg-[#12121a] hover:bg-[#1a1a28] border-[#252538] text-zinc-300"
@@ -211,7 +243,7 @@ export default function Navbar({
               title="Toggle 3M Reflective Flash on all garments"
             >
               <Zap className={`w-3.5 h-3.5 ${globalFlashCam ? "fill-black" : "text-[#00f0ff]"}`} />
-              <span className="hidden xl:inline">{globalFlashCam ? "3M FLASH" : "3M MODE"}</span>
+              <span className="hidden xl:inline whitespace-nowrap">{globalFlashCam ? "3M FLASH" : "3M MODE"}</span>
             </button>
 
             {/* Lookbook Button */}
@@ -220,10 +252,10 @@ export default function Navbar({
                 playUiClick();
                 onOpenLookbook();
               }}
-              className="hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full bg-[#12121a] hover:bg-[#1a1a28] border border-[#252538] text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+              className="hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full bg-[#12121a] hover:bg-[#1a1a28] border border-[#252538] text-xs font-mono text-zinc-300 hover:text-white whitespace-nowrap shrink-0 transition-colors"
             >
               <Camera className="w-3.5 h-3.5 text-[#ff2a5f]" />
-              <span className="hidden xl:inline">LOOKBOOK</span>
+              <span className="hidden xl:inline whitespace-nowrap">LOOKBOOK</span>
             </button>
 
             {/* Loadout Builder Button */}
@@ -232,10 +264,10 @@ export default function Navbar({
                 playUiClick();
                 onOpenLoadoutBuilder();
               }}
-              className="hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full bg-[#12121a] hover:bg-[#1a1a28] border border-[#252538] text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+              className="hidden sm:flex items-center space-x-1 px-3 py-1.5 rounded-full bg-[#12121a] hover:bg-[#1a1a28] border border-[#252538] text-xs font-mono text-zinc-300 hover:text-white whitespace-nowrap shrink-0 transition-colors"
             >
               <Layers className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden xl:inline">LOADOUT</span>
+              <span className="hidden xl:inline whitespace-nowrap">LOADOUT</span>
             </button>
 
             {/* Search Toggle */}
@@ -287,11 +319,11 @@ export default function Navbar({
                 playUiClick();
                 toggleCartDrawer(true);
               }}
-              className="relative flex items-center space-x-1.5 bg-[#12121a] hover:bg-[#1a1a28] border border-[#28283a] hover:border-[#ff2a5f]/50 px-3 py-1.5 rounded-full text-zinc-200 transition-all group"
+              className="relative flex items-center space-x-1.5 bg-[#12121a] hover:bg-[#1a1a28] border border-[#28283a] hover:border-[#ff2a5f]/50 px-3 py-1.5 rounded-full text-zinc-200 whitespace-nowrap shrink-0 transition-all group"
             >
               <ShoppingBag className="w-4 h-4 text-[#ff2a5f] group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-mono font-medium hidden sm:inline">CART</span>
-              <span className="w-5 h-5 bg-[#ff2a5f] text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-md shadow-[#ff2a5f]/30">
+              <span className="text-xs font-mono font-medium hidden sm:inline whitespace-nowrap">CART</span>
+              <span className="w-5 h-5 bg-[#ff2a5f] text-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-md shadow-[#ff2a5f]/30 shrink-0">
                 {itemCount}
               </span>
             </button>
@@ -375,6 +407,23 @@ export default function Navbar({
                   )}
                 </button>
               ))}
+              <Link
+                href="/our-story"
+                onClick={() => {
+                  playUiClick();
+                  setMobileMenuOpen(false);
+                }}
+                className={`text-left px-4 py-2.5 rounded-lg text-xs font-mono tracking-wider transition-colors flex items-center justify-between ${
+                  pathname === "/our-story"
+                    ? "bg-[#ff2a5f]/15 text-[#ff2a5f] font-bold border border-[#ff2a5f]/30"
+                    : "text-zinc-300 hover:bg-zinc-800/40"
+                }`}
+              >
+                <span>OUR STORY</span>
+                {pathname === "/our-story" && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff2a5f]" />
+                )}
+              </Link>
             </div>
           </div>
         )}
