@@ -1,0 +1,181 @@
+[
+  {
+    "id": "zenji-01",
+    "name": "NEO-TOKYO 2099 PUFF HOODIE",
+    "japaneseTitle": "ネオ東京 2099・立体発泡",
+    "price": 128,
+    "category": "Hoodies",
+    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "printType": "3D High-Density Puff Print",
+    "gsmRating": "450 GSM Heavyweight Loopback",
+    "fitType": "Tokyo Cyber Drop Shoulder",
+    "stock": 4,
+    "featured": true,
+    "description": "Engineered with 450 GSM Japanese custom loopback French terry. Features high-rise dense puff graphics across the spine and glow-in-the-dark cyber glyphs on the oversized double-layered hood.",
+    "printDetails": "High-viscosity silicone puff print cured at 160°C for permanent 3D tactile elevation. Will not crack over repeated washes.",
+    "measurements": {
+      "S": { "chest": "118cm", "length": "68cm", "shoulder": "58cm" },
+      "M": { "chest": "124cm", "length": "70cm", "shoulder": "60cm" },
+      "L": { "chest": "130cm", "length": "72cm", "shoulder": "62cm" },
+      "XL": { "chest": "136cm", "length": "74cm", "shoulder": "64cm" },
+      "XXL": { "chest": "142cm", "length": "76cm", "shoulder": "66cm" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-02",
+    "name": "KAIJU PROTO-08 OVERSIZED TEE",
+    "japaneseTitle": "怪獣試作08号・重厚半袖",
+    "price": 62,
+    "category": "Tees",
+    "sizes": ["S", "M", "L", "XL"],
+    "printType": "Discharge Silkscreen & 3M Reflective",
+    "gsmRating": "280 GSM Heavy Combed Cotton",
+    "fitType": "Boxy Oversized Fit",
+    "stock": 7,
+    "featured": true,
+    "description": "Crafted from single-origin 280 GSM compact combed yarn. Vintage wash garment-dyed treatment with 3M reflective kanji flanking the left ribcage and kaiju battle schematic on the rear.",
+    "printDetails": "Super-soft discharge ink penetrated directly into fiber grain paired with 3M Scotchlite reflective transfer tape.",
+    "measurements": {
+      "S": { "chest": "112cm", "length": "71cm", "shoulder": "54cm" },
+      "M": { "chest": "118cm", "length": "73cm", "shoulder": "56cm" },
+      "L": { "chest": "124cm", "length": "75cm", "shoulder": "58cm" },
+      "XL": { "chest": "130cm", "length": "77cm", "shoulder": "60cm" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-03",
+    "name": "SHIBUYA GHOST TACTICAL BOMBER",
+    "japaneseTitle": "渋谷亡霊・軍事飛行服",
+    "price": 210,
+    "category": "Outerwear",
+    "sizes": ["M", "L", "XL"],
+    "printType": "Laser-Etched Cordura & Kanji Patch",
+    "gsmRating": "320 GSM Cordura Ripstop",
+    "fitType": "Tokyo Cyber Drop Shoulder",
+    "stock": 2,
+    "featured": true,
+    "description": "Military-spec flight jacket engineered with DWR water-repellent Cordura ripstop. Features custom magnetic Fidlock chest buckle, reversible neon hazard lining, and detachable embroidered talisman ribbons.",
+    "printDetails": "Precision CO2 laser engraving on industrial nylon webbing with 80,000-stitch high-density metallic thread embroidery.",
+    "measurements": {
+      "M": { "chest": "126cm", "length": "69cm", "shoulder": "56cm" },
+      "L": { "chest": "132cm", "length": "71cm", "shoulder": "58cm" },
+      "XL": { "chest": "138cm", "length": "73cm", "shoulder": "60cm" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-04",
+    "name": "MECHA EVANGEL OVERSIZED HOODIE",
+    "japaneseTitle": "福音機甲・紫電刺繍",
+    "price": 135,
+    "category": "Hoodies",
+    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "printType": "Reflective Kanji Embroidery",
+    "gsmRating": "420 GSM Brushed Fleece",
+    "fitType": "Boxy Oversized Fit",
+    "stock": 5,
+    "featured": false,
+    "description": "Deep purple and obsidian colorway inspired by legendary biomechanical units. 420 GSM ultra-heavyweight brushed interior with reinforced thumbholes on the ribbed cuffs and dropped shoulder drape.",
+    "printDetails": "Precision Tatami-stitch kanji embroidery with silver core light-reactive thread that blazes under camera flash.",
+    "measurements": {
+      "S": { "chest": "120cm", "length": "69cm", "shoulder": "59cm" },
+      "M": { "chest": "126cm", "length": "71cm", "shoulder": "61cm" },
+      "L": { "chest": "132cm", "length": "73cm", "shoulder": "63cm" },
+      "XL": { "chest": "138cm", "length": "75cm", "shoulder": "65cm" },
+      "XXL": { "chest": "144cm", "length": "77cm", "shoulder": "67cm" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-05",
+    "name": "AKIRA GHOST DIVISION ACID TEE",
+    "japaneseTitle": "幽霊部隊・酸洗特化",
+    "price": 58,
+    "category": "Tees",
+    "sizes": ["S", "M", "L", "XL"],
+    "printType": "Cracked Mineral Screen Print",
+    "gsmRating": "260 GSM Mineral Washed Cotton",
+    "fitType": "Regular Street Fit",
+    "stock": 11,
+    "featured": false,
+    "description": "Hand-treated mineral wash giving each piece a 1-of-1 dystopian patina. Hand-distressed ribbed neckline with raw edge hem accents and distress cracked typography.",
+    "printDetails": "Formulated with crackle additive that creates intentional micro-fissures resembling weathered cybernetic armor plating.",
+    "measurements": {
+      "S": { "chest": "108cm", "length": "70cm", "shoulder": "51cm" },
+      "M": { "chest": "114cm", "length": "72cm", "shoulder": "53cm" },
+      "L": { "chest": "120cm", "length": "74cm", "shoulder": "55cm" },
+      "XL": { "chest": "126cm", "length": "76cm", "shoulder": "57cm" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-06",
+    "name": "RONIN ZERO MODULAR WINDBREAKER",
+    "japaneseTitle": "浪人零式・換装防風",
+    "price": 185,
+    "category": "Outerwear",
+    "sizes": ["S", "M", "L", "XL"],
+    "printType": "Reflective 3M Grid Matrix",
+    "gsmRating": "290 GSM Technical Taslan",
+    "fitType": "Tokyo Cyber Drop Shoulder",
+    "stock": 3,
+    "featured": false,
+    "description": "Weatherproof technical shell with convertible zip-off sleeves. Converts seamlessly from an oversized drop-shoulder anorak to a tactical cyber utility vest in seconds.",
+    "printDetails": "Silkscreened microscopic retro-reflective glass bead matrix displaying coordinate grids under ambient streetlights.",
+    "measurements": {
+      "S": { "chest": "120cm", "length": "70cm", "shoulder": "54cm" },
+      "M": { "chest": "126cm", "length": "72cm", "shoulder": "56cm" },
+      "L": { "chest": "132cm", "length": "74cm", "shoulder": "58cm" },
+      "XL": { "chest": "138cm", "length": "76cm", "shoulder": "60cm" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1544441892-794166f1e3be?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-07",
+    "name": "NEO-SHINJUKU CYBER TACTICAL CAP",
+    "japaneseTitle": "新宿電脳・戦術帽子",
+    "price": 44,
+    "category": "Accessories",
+    "sizes": ["OS"],
+    "printType": "Matte Silicone & Laser Metal Badge",
+    "gsmRating": "350 GSM Structured Cotton Twill",
+    "fitType": "Regular Street Fit",
+    "stock": 9,
+    "featured": false,
+    "description": "Structured 6-panel low profile dad cap with matte gunmetal zinc alloy buckle closure. Features rubberized high-relief Japanese Zenji insignia on the visor and side ear-loop webbing.",
+    "printDetails": "Cast matte zinc alloy emblem with laser-engraved serial code 'ZENJI-2026-DROP04'.",
+    "measurements": {
+      "OS": { "chest": "Adjustable", "length": "54-62cm", "shoulder": "Universal" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "id": "zenji-08",
+    "name": "CYBERNETIC HARNESS CROSSBODY BAG",
+    "japaneseTitle": "電脳装具・斜め掛鞄",
+    "price": 76,
+    "category": "Accessories",
+    "sizes": ["OS"],
+    "printType": "Screen-Printed Ballistic Webbing",
+    "gsmRating": "1000D Cordura Nylon",
+    "fitType": "Tokyo Cyber Drop Shoulder",
+    "stock": 0,
+    "featured": false,
+    "description": "Indestructible 1000D Cordura crossbody bag with Fidlock V-buckle fast release. Waterproof YKK AquaGuard zipper closures with internal compartments for tablets, keys, and cyber EDC gear.",
+    "printDetails": "Heavy industrial heat-stamped typography on high-tensile seatbelt grade nylon harness strapping.",
+    "measurements": {
+      "OS": { "chest": "3.5 Liters", "length": "28x18x8cm", "shoulder": "Adjustable Strap" }
+    },
+    "imageFront": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80",
+    "imageBack": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1000&q=80"
+  }
+]

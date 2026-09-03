@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #08080b;
+    --foreground: #f3f4f6;
+    --card: #0f0f15;
+    --card-foreground: #ffffff;
+    --border: #232330;
+    --neon-red: #ff2a5f;
+    --neon-cyan: #00f0ff;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    overflow-x: hidden;
+    selection-background-color: #ff2a5f;
+    selection-color: #ffffff;
+  }
+
+  ::selection {
+    background-color: #ff2a5f;
+    color: #ffffff;
+  }
+
+  /* Custom Cyberpunk Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #09090d;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #272738;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ff2a5f;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Atmospheric subtle grid pattern */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.cyber-dots {
+  background-image: radial-gradient(rgba(255, 42, 95, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Neon glow utilities */
+.glow-red {
+  box-shadow: 0 0 25px -5px rgba(255, 42, 95, 0.4);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 25px -5px rgba(0, 240, 255, 0.4);
+}
+
+.glow-text-red {
+  text-shadow: 0 0 12px rgba(255, 42, 95, 0.6);
+}
+
+.glow-text-cyan {
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+}
+
+/* Subtle scanline overlay for drop banners */
+.scanline {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
 }
